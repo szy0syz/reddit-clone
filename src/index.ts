@@ -12,8 +12,8 @@ app.use(morgan("dev"));
 app.get("/", (req, res) => res.send("hi~"));
 app.use('/api/auth', authRoutes);
 
-app.listen(6000, async () => {
-  console.log("Server running at http://localhost:6000");
+app.listen(3100, async () => {
+  console.log("Server running at http://localhost:3100");
 
   try {
     await createConnection();
