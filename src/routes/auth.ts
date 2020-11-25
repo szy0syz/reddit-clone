@@ -21,8 +21,8 @@ const register = async (req: Request, res: Response) => {
     // TODO: Create the user
     const user = new User({ email, username, password });
 
-    errors = await validate(user);
     // 在 entity 上定义 class-validate 生成的装饰器，可以喂给自己 “吃”
+    errors = await validate(user);
     if (errors.length > 0) return res.status(400).json({ errors });
 
     await user.save();
