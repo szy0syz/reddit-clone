@@ -10,11 +10,14 @@
    },
    "dependencies": {
       "express": "^4.17.1",
+      "morgan": "^1.10.0",
+      "nodemon": "^2.0.6",
       "pg": "^8.5.1",
       "reflect-metadata": "^0.1.10",
       "typeorm": "0.2.29"
    },
    "scripts": {
-      "start": "ts-node src/index.ts"
+      "start": "ts-node src/index.ts",
+      "dev": "nodemon --exec ts-node src/server.ts"
    }
 }

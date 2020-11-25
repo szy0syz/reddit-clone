@@ -1,6 +1,6 @@
 # Reddit Clone
 
-> `Nextjs` `TypeORM` `TailwindCSS` `TypeScript`
+> `Nextjs` `TypeORM` `TailwindCSS` `TypeScript` `[Classsed]`
 
 ## Notes
 
