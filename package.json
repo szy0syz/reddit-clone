@@ -22,6 +22,6 @@
    },
    "scripts": {
       "start": "ts-node src/server.ts",
-      "dev": "nodemon --watch ts-node src/server.ts"
+      "dev": "nodemon --watch src/**/* --exec 'ts-node' ./src/server.ts"
    }
 }

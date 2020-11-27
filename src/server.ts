@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use(trim);
 
-app.get("/", (req, res) => res.send("hi~"));
+app.get("/", (_, res) => res.send("hi~"));
 app.use("/api/auth", authRoutes);
 
 app.listen(3100, async () => {
