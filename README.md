@@ -88,3 +88,24 @@ export class User extends BaseEntity {
   }
 }
 ```
+
+### Client
+
+- `npx create-next-app client`
+- `yarn add --dev typescript @types/react @types/node`
+- `touch tsconfig.json` 后再 `yarn dev` 会自动填入配置文件
+
+- 修改 `_app.js` -> `_app.ts`
+
+```typescript
+import { AppProps } from 'next/app';
+
+function App({ Component, pageProps }: AppProps) {
+  return <Component {...pageProps} />;
+}
+
+export default App;
+```
+
+- `yarn add tailwindcss@latest postcss@latest autoprefixer@latest`
+- `npx tailwindcss init -p`
