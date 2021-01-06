@@ -1,5 +1,6 @@
 import { Request, Response, Router } from "express";
 import Post from "../entities/Post";
+import Sub from "../entities/Sub";
 import authMiddleware from "../middlewares/auth";
 
 const createPost = async (req: Request, res: Response) => {
@@ -11,9 +12,9 @@ const createPost = async (req: Request, res: Response) => {
   const user = res.locals.user;
 
   try {
-    // TODO: find sub
+    const subRecord = await Sub.findOneOrFail({ name: sub });
 
-    const post = new Post({ title, body, user, subName: sub });
+    const post = new Post({ title, body, user, sub: subRecord });
     await post.save();
 
     return res.json(post);

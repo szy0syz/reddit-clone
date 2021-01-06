@@ -1,8 +1,17 @@
-import { Index, Entity, Column, ManyToOne, JoinColumn } from "typeorm";
-import BaseEntity from "./Entity";
-import User from "./User";
+import {
+  Index,
+  Entity,
+  Column,
+  ManyToOne,
+  JoinColumn,
+  BeforeInsert,
+} from 'typeorm';
+import { makeid, slugify } from '../../utils/helpers';
+import BaseEntity from './Entity';
+import Sub from './Sub';
+import User from './User';
 
-@Entity("posts")
+@Entity('posts')
 export default class Post extends BaseEntity {
   constructor(post: Partial<Post>) {
     super();
@@ -20,13 +29,21 @@ export default class Post extends BaseEntity {
   @Column()
   slug: string;
 
-  @Column({ nullable: true, type: "text" })
+  @Column({ nullable: true, type: 'text' })
   body: string;
 
-  @Column()
-  subName: string;
-
   @ManyToOne(() => User, (user) => user.posts)
-  @JoinColumn({ name: "username", referencedColumnName: "username" })
+  @JoinColumn({ name: 'username', referencedColumnName: 'username' })
   user: User;
+
+  // TODO
+  @ManyToOne(() => Sub, (user) => user.posts)
+  @JoinColumn({ name: 'subName', referencedColumnName: 'name' })
+  sub: Sub;
+
+  @BeforeInsert()
+  makeIdAndSlug() {
+    this.identifier = makeid(7);
+    this.slug = slugify(this.title);
+  }
 }
