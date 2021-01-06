@@ -18,7 +18,7 @@ export default class Sub extends BaseEntity {
   }
 
   @Index()
-  @Column()
+  @Column({ unique: true })
   name: string;
 
   @Column()
@@ -27,16 +27,16 @@ export default class Sub extends BaseEntity {
   @Column({ type: 'text', nullable: true })
   description: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ nullable: true })
   imageUrn: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ nullable: true })
   bannerUrn: string;
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'username', referencedColumnName: 'username' })
   user: User;
 
-  @OneToMany(() => Post, (post) => post.subName)
+  @OneToMany(() => Post, (post) => post.sub)
   posts: Post[];
 }

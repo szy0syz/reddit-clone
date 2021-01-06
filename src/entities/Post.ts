@@ -6,7 +6,7 @@ import {
   JoinColumn,
   BeforeInsert,
 } from 'typeorm';
-import { makeid, slugify } from '../../utils/helpers';
+import { makeId, slugify } from '../utils/helpers';
 import BaseEntity from './Entity';
 import Sub from './Sub';
 import User from './User';
@@ -32,18 +32,20 @@ export default class Post extends BaseEntity {
   @Column({ nullable: true, type: 'text' })
   body: string;
 
+  @Column()
+  subName: string;
+
   @ManyToOne(() => User, (user) => user.posts)
   @JoinColumn({ name: 'username', referencedColumnName: 'username' })
   user: User;
 
-  // TODO
-  @ManyToOne(() => Sub, (user) => user.posts)
+  @ManyToOne(() => Sub, (sub) => sub.posts)
   @JoinColumn({ name: 'subName', referencedColumnName: 'name' })
   sub: Sub;
 
   @BeforeInsert()
   makeIdAndSlug() {
-    this.identifier = makeid(7);
+    this.identifier = makeId(7);
     this.slug = slugify(this.title);
   }
 }

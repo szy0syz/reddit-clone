@@ -119,4 +119,4 @@ export default App;
 - `yarn add tailwindcss@latest postcss@latest autoprefixer@latest`
 - `npx tailwindcss init -p`
 
-> 4-17
+> #5-5:05

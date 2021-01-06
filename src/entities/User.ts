@@ -1,14 +1,11 @@
 import { IsEmail, Length } from "class-validator";
 import bcrypt from "bcrypt";
-import { Exclude, classToPlain } from "class-transformer";
+import { Exclude } from "class-transformer";
 import {
   Index,
   Entity,
   Column,
   BeforeInsert,
-  CreateDateColumn,
-  UpdateDateColumn,
-  PrimaryGeneratedColumn,
   OneToMany,
 } from "typeorm";
 import BaseEntity from './Entity'
