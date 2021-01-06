@@ -1,5 +1,5 @@
 {
-   "synchronize": true,
+   "synchronize": false,
    "logging": true,
    "type": "postgres",
    "host": "localhost",
