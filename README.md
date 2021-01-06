@@ -89,6 +89,9 @@ export class User extends BaseEntity {
 }
 ```
 
+- `npm i jsonwebtoken cookie cookie-parser dotenv`
+- `npm i -D @types/jsonwebtoken @types/cookie @types/cookie-parser`
+
 ### Client
 
 - `npx create-next-app client`
