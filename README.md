@@ -92,6 +92,12 @@ export class User extends BaseEntity {
 - `npm i jsonwebtoken cookie cookie-parser dotenv`
 - `npm i -D @types/jsonwebtoken @types/cookie @types/cookie-parser`
 
+#### 数据库
+
+- `npm run typeorm entity:create -- --name Post`
+- `npm run typeorm schema:drop`
+- `npm run typeorm migration:generate -- --name create-users-table`
+
 ### Client
 
 - `npx create-next-app client`
@@ -112,3 +118,5 @@ export default App;
 
 - `yarn add tailwindcss@latest postcss@latest autoprefixer@latest`
 - `npx tailwindcss init -p`
+
+> 4-17

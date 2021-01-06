@@ -1,10 +1,11 @@
 import bcrypt from "bcrypt";
 import { Request, Response, Router } from "express";
-import { User } from "../entities/User";
+import User from "../entities/User";
 import { validate, isEmpty } from "class-validator";
 import jwt from "jsonwebtoken";
 import cookie from "cookie";
 import dotenv from "dotenv";
+import authMiddleware from "../middlewares/auth";
 
 dotenv.config();
 
@@ -80,8 +81,29 @@ const login = async (req: Request, res: Response) => {
   } catch (error) {}
 };
 
+const logout = async (_: Request, res: Response) => {
+  res.set(
+    "Set-Cookie",
+    cookie.serialize("token", "", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      expires: new Date(0),
+      path: "/",
+    })
+  );
+
+  res.status(200).json({ success: true });
+};
+
+const me = async (req: Request, res: Response) => {
+  return res.json(res.locals.user);
+};
+
 const router = Router();
+router.post("/me", authMiddleware, me);
 router.post("/login", login);
+router.post("/logout", authMiddleware, logout);
 router.post("/register", register);
 
 export default router;
