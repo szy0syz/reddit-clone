@@ -139,7 +139,21 @@ export default Comment;
 ```
 
 > - 当关闭了同步 `"synchronize": false`，而新建了一个 `Entity` 时，主动 `npm run typeorm migration:generate -- --name create-comments-table`
-> - 然后就可以执行sql了：`npm run typeorm migration:run`
+> - 然后就可以执行 sql 了：`npm run typeorm migration:run`
+> - 最后如果发现刚创建的表有些字段没配置好，且没有写入数据时，可以进行 `revert` 恢复操作，然后修改字段，然后重新 `generate` 和 `run`
+>   - 特别注意，revert 操作会先删表，因为原操作是创建表，然后删 migrations 的该行记录
+>   - 如果已经同步到线上，就不能这样搞，只能再生成一个新的 migration 操作
+>   - `npm run typeorm migration:revert`
+>   - 把原 `xxxxxxx-create-comments-table.ts` 先删除，因为数据库 `migrations` 里已经删除该记录，一定先确认！
+>   - `npm run typeorm migration:generate -- --name create-comments-table`
+>   - `npm run typeorm migration:run`
+>   - 最后再检查下 数据库的 `migrations` 里到和文件夹内的文件是否一一对应
+
+```ts
+// 修改 Entity 字段
+@ManyToOne(() => Post, (post) => post.comments, { nullable: false })
+post: Post;
+```
 
 ### Client
 
