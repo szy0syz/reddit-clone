@@ -176,4 +176,18 @@ export default App;
 - `yarn add tailwindcss@latest postcss@latest autoprefixer@latest`
 - `npx tailwindcss init -p`
 
-> #5-5:05
+```js
+module.exports = {
+  purge: ['./src/pages/**/*.js', './src/components/**/*.js'],
+  darkMode: false, // or 'media' or 'class'
+  theme: {
+    extend: {},
+  },
+  variants: {
+    extend: {},
+  },
+  plugins: [],
+}
+```
+
+> #6
