@@ -13,8 +13,8 @@ export default class User extends BaseEntity {
   }
 
   @Index()
-  @IsEmail(undefined, { message: 'Must be a valid email address' })
-  @Length(1, 255, { message: 'Email is empty' })
+  @IsEmail(undefined, { message: '邮箱地址不正确' })
+  @Length(1, 255, { message: '邮箱地址不能为空' })
   @Column({ unique: true })
   email: string;
 

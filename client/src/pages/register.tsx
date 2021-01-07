@@ -1,8 +1,10 @@
 import Axios from 'axios';
+import { error } from 'console';
+import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Link from 'next/link';
 import { FormEvent, useState } from 'react';
-import cls from 'classnames';
+import InputGroup from '../components/InputGroup';
 
 export default function Home() {
   const [email, setEmail] = useState('');
@@ -11,8 +13,14 @@ export default function Home() {
   const [agreement, setAgreement] = useState(false);
   const [errors, setErrors] = useState<any>({});
 
+  const router = useRouter();
+
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
+
+    if (!agreement) {
+      return setErrors({ ...errors, agreement: '请同意相关条款' });
+    }
 
     try {
       const res = await Axios.post('/auth/register', {
@@ -20,9 +28,12 @@ export default function Home() {
         password,
         username,
       });
+      console.log(res);
+      debugger
+      router.push('/login');
     } catch (error) {
       console.error(error);
-      setErrors(error.response.data);
+      setErrors(error?.response?.data || {});
     }
   };
 
@@ -64,36 +75,29 @@ export default function Home() {
               <label htmlFor="agreement" className="text-xs cursor-pointer">
                 I agree to get emails about cool stuff on Reddit
               </label>
+              <small className="block font-medium text-red-500">
+                {errors.agreement}
+              </small>
             </div>
-            <div className="mb-2">
-              <input
-                type="email"
-                className={cls('w-full p-3 transition duration-200 border border-gray-400 rounded bg-gray-50 focus:bg-white hover:bg-white', {
-                  'border-red-500': errors.email
-                })}
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <div className="mb-2">
-              <input
-                type="text"
-                className="w-full p-3 transition duration-200 border border-gray-400 rounded bg-gray-50 focus:bg-white hover:bg-white"
-                placeholder="Username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-              />
-            </div>
-            <div className="mb-2">
-              <input
-                type="password"
-                className="w-full p-3 transition duration-200 border border-gray-400 rounded bg-gray-50 focus:bg-white hover:bg-white"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
+            <InputGroup
+              placeholder="Email"
+              value={email}
+              setValue={setEmail}
+              error={errors.email}
+            />
+            <InputGroup
+              placeholder="Username"
+              value={username}
+              setValue={setUsername}
+              error={errors.username}
+            />
+            <InputGroup
+              placeholder="Password"
+              value={password}
+              type="password"
+              setValue={setPassword}
+              error={errors.password}
+            />
             <button className="w-full py-2 mb-4 text-xs font-bold text-white uppercase bg-blue-500 border border-blue-500 rounded">
               Sign Up
             </button>

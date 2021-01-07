@@ -24,8 +24,8 @@ const register = async (req: Request, res: Response) => {
     const emailUser = await User.findOne({ email });
     const usernameUser = await User.findOne({ username });
 
-    if (emailUser) errors.email = 'Email is already taken';
-    if (usernameUser) errors.username = 'Username is already taken';
+    if (emailUser) errors.email = '邮箱地址已被注册';
+    if (usernameUser) errors.username = '该用户名已被注册';
 
     if (Object.keys(errors).length > 0) {
       return res.status(400).json(errors);
