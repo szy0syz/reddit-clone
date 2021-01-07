@@ -13,9 +13,9 @@
 
 ```ts
 // ---- entity ----
-import { IsEmail, Min } from "class-validator";
+import { IsEmail, Min } from 'class-validator';
 
-@Entity("users")
+@Entity('users')
 export class User extends BaseEntity {
   constructor(user: Partial<User>) {
     super();
@@ -46,7 +46,7 @@ if (errors.length > 0) return res.status(400).json({ errors });
 > 为什么 typeORM 那么好用 ？
 
 ```ts
-@Entity("users")
+@Entity('users')
 export class User extends BaseEntity {
   constructor(user: Partial<User>) {
     super();
@@ -63,7 +63,7 @@ export class User extends BaseEntity {
   email: string;
 
   @Index()
-  @Length(3, 32, { message: "用户名最少为三个字符" })
+  @Length(3, 32, { message: '用户名最少为三个字符' })
   @Column({ unique: true })
   username: string;
 
@@ -99,13 +99,20 @@ export class User extends BaseEntity {
 - `npm run typeorm migration:generate -- --name create-users-table`
 
 ```ts
-import { BeforeInsert, Column, Entity, Index, JoinColumn, ManyToOne } from "typeorm";
-import { BaseEntity } from "typeorm";
-import { makeId } from "../utils/helpers";
-import Post from "./Post";
-import User from "./User";
+import {
+  BeforeInsert,
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+} from 'typeorm';
+import { BaseEntity } from 'typeorm';
+import { makeId } from '../utils/helpers';
+import Post from './Post';
+import User from './User';
 
-@Entity("comments")
+@Entity('comments')
 class Comment extends BaseEntity {
   constructor(comment: Partial<Comment>) {
     super();
@@ -123,7 +130,7 @@ class Comment extends BaseEntity {
   username: string;
 
   @ManyToOne(() => User)
-  @JoinColumn({ name: "username", referencedColumnName: "username" })
+  @JoinColumn({ name: 'username', referencedColumnName: 'username' })
   user: User;
 
   @ManyToOne(() => Post, (post) => post.comments)
@@ -155,6 +162,8 @@ export default Comment;
 post: Post;
 ```
 
+- `npm i -S cors`
+
 ### Client
 
 - `npx create-next-app client`
@@ -164,7 +173,7 @@ post: Post;
 - 修改 `_app.js` -> `_app.ts`
 
 ```typescript
-import { AppProps } from "next/app";
+import { AppProps } from 'next/app';
 
 function App({ Component, pageProps }: AppProps) {
   return <Component {...pageProps} />;
@@ -187,7 +196,26 @@ module.exports = {
     extend: {},
   },
   plugins: [],
-}
+};
 ```
 
-> #6
+- 调色：<https://noeldelgado.github.io/shadowlord/#0079d3>
+- 字体：
+  - <https://fonts.google.com/>
+  - tailwind.config.js
+  - _document.tsx
+
+```js
+fontFamily: {
+  body: ['IBM Plex Sans'],
+},
+```
+
+```jsx
+<body className="font-body">
+  <Main />
+  <NextScript />
+</body>
+```
+
+> #7 29:29

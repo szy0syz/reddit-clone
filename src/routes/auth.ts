@@ -9,11 +9,17 @@ import authMiddleware from '../middlewares/auth';
 
 dotenv.config();
 
+const mapErrors = (errors: Object[]) => {
+  return errors.reduce((prev: any, err: any) => {
+    prev[err.property] = Object.entries(err.constraints)[0][1]
+    return prev
+  }, {})
+}
+
 const register = async (req: Request, res: Response) => {
   const { email, username, password } = req.body;
 
   try {
-    // TODO: Validate data
     let errors: any = {};
     const emailUser = await User.findOne({ email });
     const usernameUser = await User.findOne({ username });
@@ -25,12 +31,11 @@ const register = async (req: Request, res: Response) => {
       return res.status(400).json(errors);
     }
 
-    // TODO: Create the user
     const user = new User({ email, username, password });
 
     // 在 entity 上定义 class-validate 生成的装饰器，可以喂给自己 “吃”
     errors = await validate(user);
-    if (errors.length > 0) return res.status(400).json({ errors });
+    if (errors.length > 0) return res.status(400).json(mapErrors(errors));
 
     await user.save();
 
