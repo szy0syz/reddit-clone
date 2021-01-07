@@ -138,9 +138,8 @@ class Comment extends BaseEntity {
 export default Comment;
 ```
 
-> 当关闭了同步 `"synchronize": false`，而新建了一个 `Entity` 时，主动 `npm run typeorm migration:generate -- --name create-comments-table`
-
-> 然后就可以执行sql了：`npm run typeorm migration:run`
+> - 当关闭了同步 `"synchronize": false`，而新建了一个 `Entity` 时，主动 `npm run typeorm migration:generate -- --name create-comments-table`
+> - 然后就可以执行sql了：`npm run typeorm migration:run`
 
 ### Client
 
