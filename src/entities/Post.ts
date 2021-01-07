@@ -1,17 +1,11 @@
-import {
-  Index,
-  Entity,
-  Column,
-  ManyToOne,
-  JoinColumn,
-  BeforeInsert,
-} from 'typeorm';
-import { makeId, slugify } from '../utils/helpers';
-import BaseEntity from './Entity';
-import Sub from './Sub';
-import User from './User';
+import { Index, Entity, Column, ManyToOne, JoinColumn, BeforeInsert, OneToMany } from "typeorm";
+import { makeId, slugify } from "../utils/helpers";
+import Comment from "./Comment";
+import BaseEntity from "./Entity";
+import Sub from "./Sub";
+import User from "./User";
 
-@Entity('posts')
+@Entity("posts")
 export default class Post extends BaseEntity {
   constructor(post: Partial<Post>) {
     super();
@@ -29,19 +23,22 @@ export default class Post extends BaseEntity {
   @Column()
   slug: string;
 
-  @Column({ nullable: true, type: 'text' })
+  @Column({ nullable: true, type: "text" })
   body: string;
 
   @Column()
   subName: string;
 
   @ManyToOne(() => User, (user) => user.posts)
-  @JoinColumn({ name: 'username', referencedColumnName: 'username' })
+  @JoinColumn({ name: "username", referencedColumnName: "username" })
   user: User;
 
   @ManyToOne(() => Sub, (sub) => sub.posts)
-  @JoinColumn({ name: 'subName', referencedColumnName: 'name' })
+  @JoinColumn({ name: "subName", referencedColumnName: "name" })
   sub: Sub;
+
+  @OneToMany(() => Comment, (comment) => comment.post)
+  comments: Comment[];
 
   @BeforeInsert()
   makeIdAndSlug() {

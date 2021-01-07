@@ -98,6 +98,50 @@ export class User extends BaseEntity {
 - `npm run typeorm schema:drop`
 - `npm run typeorm migration:generate -- --name create-users-table`
 
+```ts
+import { BeforeInsert, Column, Entity, Index, JoinColumn, ManyToOne } from "typeorm";
+import { BaseEntity } from "typeorm";
+import { makeId } from "../utils/helpers";
+import Post from "./Post";
+import User from "./User";
+
+@Entity("comments")
+class Comment extends BaseEntity {
+  constructor(comment: Partial<Comment>) {
+    super();
+    Object.assign(this, comment);
+  }
+
+  @Index()
+  @Column()
+  identifier: string;
+
+  @Column()
+  body: string;
+
+  @Column()
+  username: string;
+
+  @ManyToOne(() => User)
+  @JoinColumn({ name: "username", referencedColumnName: "username" })
+  user: User;
+
+  @ManyToOne(() => Post, (post) => post.comments)
+  post: Post;
+
+  @BeforeInsert()
+  makeId() {
+    this.identifier = makeId(8);
+  }
+}
+
+export default Comment;
+```
+
+> 当关闭了同步 `"synchronize": false`，而新建了一个 `Entity` 时，主动 `npm run typeorm migration:generate -- --name create-comments-table`
+
+> 然后就可以执行sql了：`npm run typeorm migration:run`
+
 ### Client
 
 - `npx create-next-app client`
@@ -107,7 +151,7 @@ export class User extends BaseEntity {
 - 修改 `_app.js` -> `_app.ts`
 
 ```typescript
-import { AppProps } from 'next/app';
+import { AppProps } from "next/app";
 
 function App({ Component, pageProps }: AppProps) {
   return <Component {...pageProps} />;
