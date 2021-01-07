@@ -1,4 +1,5 @@
 import { Request, Response, Router } from "express";
+import Comment from "../entities/Comment";
 import Post from "../entities/Post";
 import Sub from "../entities/Sub";
 import authMiddleware from "../middlewares/auth";
@@ -41,11 +42,33 @@ const getPosts = async (_: Request, res: Response) => {
 const getPost = async (req: Request, res: Response) => {
   const { identifier, slug } = req.params;
   try {
-    const post = await Post.findOneOrFail({ identifier, slug }, {
-      relations: ['sub']
-    });
+    const post = await Post.findOneOrFail(
+      { identifier, slug },
+      { relations: ["sub"] } // relations: ["sub", 'comments'],
+    );
 
     return res.json(post);
+  } catch (error) {
+    console.log(error);
+    return res.status(404).json({ error: "Post not found" });
+  }
+};
+
+const commentOnPost = async (req: Request, res: Response) => {
+  const { identifier, slug } = req.params;
+  const body = req.body.body; // comment.body
+
+  try {
+    const post = await Post.findOneOrFail({ identifier, slug });
+    const comment = new Comment({
+      body,
+      user: res.locals.user,
+      post,
+    });
+
+    await comment.save();
+
+    return res.json(comment);
   } catch (error) {
     console.log(error);
     return res.status(404).json({ error: "Post not found" });
@@ -55,6 +78,7 @@ const getPost = async (req: Request, res: Response) => {
 const router = Router();
 
 router.get("/:identifier/:slug", authMiddleware, getPost);
+router.get("/:identifier/:slug/comments", authMiddleware, commentOnPost);
 router.get("/", authMiddleware, getPosts);
 router.post("/", authMiddleware, createPost);
 

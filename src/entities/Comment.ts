@@ -19,7 +19,7 @@ class Comment extends BaseEntity {
   body: string;
 
   @Column()
-  username: string;
+  username: string; // 这个 username 来自 User 实体的 username 字段
 
   @ManyToOne(() => User)
   @JoinColumn({ name: "username", referencedColumnName: "username" })
