@@ -13,9 +13,9 @@
 
 ```ts
 // ---- entity ----
-import { IsEmail, Min } from 'class-validator';
+import { IsEmail, Min } from "class-validator";
 
-@Entity('users')
+@Entity("users")
 export class User extends BaseEntity {
   constructor(user: Partial<User>) {
     super();
@@ -46,7 +46,7 @@ if (errors.length > 0) return res.status(400).json({ errors });
 > 为什么 typeORM 那么好用 ？
 
 ```ts
-@Entity('users')
+@Entity("users")
 export class User extends BaseEntity {
   constructor(user: Partial<User>) {
     super();
@@ -63,7 +63,7 @@ export class User extends BaseEntity {
   email: string;
 
   @Index()
-  @Length(3, 32, { message: '用户名最少为三个字符' })
+  @Length(3, 32, { message: "用户名最少为三个字符" })
   @Column({ unique: true })
   username: string;
 
@@ -99,20 +99,13 @@ export class User extends BaseEntity {
 - `npm run typeorm migration:generate -- --name create-users-table`
 
 ```ts
-import {
-  BeforeInsert,
-  Column,
-  Entity,
-  Index,
-  JoinColumn,
-  ManyToOne,
-} from 'typeorm';
-import { BaseEntity } from 'typeorm';
-import { makeId } from '../utils/helpers';
-import Post from './Post';
-import User from './User';
+import { BeforeInsert, Column, Entity, Index, JoinColumn, ManyToOne } from "typeorm";
+import { BaseEntity } from "typeorm";
+import { makeId } from "../utils/helpers";
+import Post from "./Post";
+import User from "./User";
 
-@Entity('comments')
+@Entity("comments")
 class Comment extends BaseEntity {
   constructor(comment: Partial<Comment>) {
     super();
@@ -130,7 +123,7 @@ class Comment extends BaseEntity {
   username: string;
 
   @ManyToOne(() => User)
-  @JoinColumn({ name: 'username', referencedColumnName: 'username' })
+  @JoinColumn({ name: "username", referencedColumnName: "username" })
   user: User;
 
   @ManyToOne(() => Post, (post) => post.comments)
@@ -162,14 +155,33 @@ export default Comment;
 post: Post;
 ```
 
+- 开启跨域 + 开启 cookie
 - `npm i -S cors`
 
 ```js
+// 前端
+Axios.defaults.withCredentials = true;
+```
+
+```js
+// 后端
 app.use(
   cors({
     credentials: true,
     origin: process.env.ORIGIN,
-    optionsSuccessStatus: 200
+    optionsSuccessStatus: 200,
+  })
+);
+
+// 写入 cookie
+res.set(
+  "Set-Cookie",
+  cookie.serialize("token", token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    maxAge: 3600,
+    path: "/",
   })
 );
 ```
@@ -183,7 +195,7 @@ app.use(
 - 修改 `_app.js` -> `_app.ts`
 
 ```typescript
-import { AppProps } from 'next/app';
+import { AppProps } from "next/app";
 
 function App({ Component, pageProps }: AppProps) {
   return <Component {...pageProps} />;
@@ -197,7 +209,7 @@ export default App;
 
 ```js
 module.exports = {
-  purge: ['./src/pages/**/*.js', './src/components/**/*.js'],
+  purge: ["./src/pages/**/*.js", "./src/components/**/*.js"],
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {},
@@ -213,7 +225,7 @@ module.exports = {
 - 字体：
   - <https://fonts.google.com/>
   - tailwind.config.js
-  - _document.tsx
+  - \_document.tsx
 
 ```js
 fontFamily: {
@@ -226,6 +238,50 @@ fontFamily: {
   <Main />
   <NextScript />
 </body>
+```
+
+- 封装一个 Input 组件
+
+```ts
+import cls from "classnames";
+
+interface InputGroupProps {
+  className?: string;
+  type?: string;
+  placeholder?: string;
+  value: string;
+  error: string | undefined;
+  setValue: (str: string) => void;
+}
+
+const InputGroup: React.FC<InputGroupProps> = ({
+  className = "mb-2",
+  type = "text",
+  placeholder = "",
+  error,
+  value,
+  setValue,
+}) => {
+  return (
+    <div className={className}>
+      <input
+        type={type}
+        className={cls(
+          "w-full p-3 transition duration-200 border border-gray-400 rounded bg-gray-50 focus:bg-white hover:bg-white",
+          {
+            "border-red-500": error,
+          }
+        )}
+        placeholder={placeholder}
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+      />
+      <small className="font-medium text-red-500">{error}</small>
+    </div>
+  );
+};
+
+export default InputGroup;
 ```
 
 > #8 4:00
