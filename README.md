@@ -284,4 +284,25 @@ const InputGroup: React.FC<InputGroupProps> = ({
 export default InputGroup;
 ```
 
+- Next.js 使用 svg
+  - `npm i @svgr/webpack -D`
+  - `next.config.js`
+
+```js
+// next.config.js
+module.exports = {
+  webpack(config) {
+    config.module.rules.push({
+      test: /\.svg$/,
+      issuer: {
+        test: /\.(js|ts)x?$/,
+      },
+      use: ["@svgr/webpack"],
+    });
+
+    return config;
+  },
+};
+```
+
 > #8 4:00
