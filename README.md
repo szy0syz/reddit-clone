@@ -164,6 +164,16 @@ post: Post;
 
 - `npm i -S cors`
 
+```js
+app.use(
+  cors({
+    credentials: true,
+    origin: process.env.ORIGIN,
+    optionsSuccessStatus: 200
+  })
+);
+```
+
 ### Client
 
 - `npx create-next-app client`
@@ -218,4 +228,4 @@ fontFamily: {
 </body>
 ```
 
-> #7 29:29
+> #8

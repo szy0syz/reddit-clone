@@ -53,20 +53,20 @@ const login = async (req: Request, res: Response) => {
   try {
     let errors: any = {};
 
-    if (isEmpty(username)) errors.username = 'Username must not be empty';
-    if (isEmpty(password)) errors.password = 'Password must not be empty';
+    if (isEmpty(username)) errors.username = '用户名不能为空';
+    if (isEmpty(password)) errors.password = '密码不能为空';
     if (Object.keys(errors).length > 0) {
       return res.status(400).json(errors);
     }
 
     const user = await User.findOne({ username });
 
-    if (!user) return res.status(404).json({ error: 'User not found' });
+    if (!user) return res.status(404).json({ username: '用户名没有注册' });
 
     const passwordMatches = await bcrypt.compare(password, user.password);
 
     if (!passwordMatches) {
-      return res.status(401).json({ password: 'Password is incorrect' });
+      return res.status(401).json({ password: '密码不正确' });
     }
 
     const token = jwt.sign({ username }, process.env.JWT_SECRET!);
