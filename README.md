@@ -186,6 +186,20 @@ res.set(
 );
 ```
 
+```ts
+// 类似 mongoose 的虚拟字段，但感觉一股面向对象的味道
+// Entity/Post.ts
+@Expose() get url(): string {
+  return `/r/${this.subName}/${this.identifier}/${this.slug}`;
+}
+
+// protected url: string;
+// @AfterLoad()
+// createField() {
+//   this.url = `/r/${this.subName}/${this.identifier}/${this.slug}`;
+// }
+```
+
 ### Client
 
 - `npx create-next-app client`
