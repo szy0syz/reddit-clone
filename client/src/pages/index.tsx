@@ -5,6 +5,7 @@ import { Fragment, useEffect, useState } from 'react';
 import { Post } from '../types';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+// import { GetServerSideProps } from 'next';
 
 dayjs.extend(relativeTime);
 
@@ -68,9 +69,20 @@ export default function Home() {
                   <div className="flex">
                     <Link href={post.url}>
                       <a>
-                        <div className="px-1 mr-2 text-gray-500 rounded cursor-pointer"></div>
+                        <div className="px-1 py-1 mr-1 text-xs text-gray-400 rounded cursor-pointer hover:bg-gray-200">
+                          <i className="mr-1 fas fa-comment-alt fa-xs"></i>
+                          <span className="font-bold">20 Comments</span>
+                        </div>
                       </a>
                     </Link>
+                    <div className="px-1 py-1 mr-1 text-xs text-gray-400 rounded cursor-pointer hover:bg-gray-200">
+                      <i className="mr-1 fas fa-share fa-xs"></i>
+                      <span className="font-bold">Share</span>
+                    </div>
+                    <div className="px-1 py-1 mr-1 text-xs text-gray-400 rounded cursor-pointer hover:bg-gray-200">
+                      <i className="mr-1 fas fa-bookmark fa-xs"></i>
+                      <span className="font-bold">Save</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -82,3 +94,15 @@ export default function Home() {
     </div>
   );
 }
+
+// export const getServerSideProps: GetServerSideProps = async (context) => {
+//   try {
+//     const res = await Axios.get('/posts');
+
+//     return {
+//       props: { posts: res.data },
+//     };
+//   } catch (error) {
+//     return { props: { error: 'Something went wrong' } };
+//   }
+// };
