@@ -284,6 +284,31 @@ await getConnection().transaction(async (tm) => {
 });
 ```
 
+- 面向对象的威力
+
+```js
+// Entity/Post.ts  | Comment.ts 也有
+protected userVote: number;
+
+setUserVote(user: User) {
+  // 传进来的 user 是 res.locals.user
+  // * 你到底是顶了一下还是踩了一下
+  const index = this.votes?.findIndex((v) => v.username === user.username);
+  this.userVote = index > -1 ? this.votes[index].value : 0;
+}
+```
+
+```js
+//
+const vote = async (req: Request, res: Response) => {
+  // ...
+  const user: User = res.locals.user;
+  post.setUserVote(user);
+  post.comments.forEach((c) => c.setUserVote(user));
+  // ...
+}
+```
+
 ### Client
 
 - `npx create-next-app client`
