@@ -200,6 +200,90 @@ res.set(
 // }
 ```
 
+![drawSQL](assets/drawSQL.png)
+
+```ts
+import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
+import Comment from './Comment';
+import BaseEntity from './Entity';
+import Post from './Post';
+import User from './User';
+
+@Entity('votes')
+export default class Vote extends BaseEntity {
+  constructor(vote: Partial<Vote>) {
+    super();
+    Object.assign(this, vote);
+  }
+
+  @Column()
+  value: number;
+
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'username', referencedColumnName: 'username' })
+  user: User;
+
+  @Column()
+  username: string;
+
+  @ManyToOne(() => Post)
+  post: Post;
+
+  @ManyToOne(() => Comment)
+  comment: Comment;
+}
+```
+
+- `npm run typeorm migration:generate -- --name create-votes-table`
+- `npm run typeorm migration:run`
+
+- **关于vote时是否用写的事务，还是用读的计算**
+  - 如果单机系统开事务就算了，如果分布式还是读的计算吧
+
+```ts
+// ---- Entity/Post.ts ----
+// ! 这里的意思就是把所有和这个帖子相关的vote取出来，后面计算用
+@OneToMany(() => Vote, (Vote) => Vote.post)
+votes: Vote[];
+
+@Expose() get url(): string {
+  return `/r/${this.subName}/${this.identifier}/${this.slug}`;
+}
+
+@Expose() get commentCount(): number {
+  return this.comments?.length;
+}
+
+// ! 计算帖子的得分，有些人1、有些人-1 ...
+@Expose() get voteScore(): number {
+  return this.votes?.reduce((memo, curt) => memo + (curt.value || 0), 0);
+}
+```
+
+- 要是开事务就开两个以上了
+
+```ts
+// for example:
+await getConnection().transaction(async (tm) => {
+  await tm.query(
+    `
+    insert into updoot ("userId", "postId", value)
+    values ($1, $2, $3);
+  `,
+    [userId, postId, value]
+  );
+
+  await tm.query(
+    `
+    update post
+    set points = points + $1
+    where id = $2;
+  `,
+    [value, postId]
+  );
+});
+```
+
 ### Client
 
 - `npx create-next-app client`

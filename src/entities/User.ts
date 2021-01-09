@@ -4,6 +4,7 @@ import { Exclude } from 'class-transformer';
 import { Index, Entity, Column, BeforeInsert, OneToMany } from 'typeorm';
 import BaseEntity from './Entity';
 import Post from './Post';
+import Vote from './Vote';
 
 @Entity('users')
 export default class User extends BaseEntity {
@@ -30,6 +31,9 @@ export default class User extends BaseEntity {
 
   @OneToMany(() => Post, (post) => post.user)
   posts: Post[];
+
+  @OneToMany(() => Vote, (vote) => vote.user)
+  votes: Vote[];
 
   @BeforeInsert()
   async hashPassword() {
