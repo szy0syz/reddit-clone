@@ -10,4 +10,7 @@ export interface Post {
 
   // virtual fields
   url: string;
+  userVote?: number;
+  voteScore?: number;
+  commentCount?: number;
 }

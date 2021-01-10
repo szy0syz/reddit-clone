@@ -5,6 +5,7 @@ import { validate, isEmpty } from 'class-validator';
 import jwt from 'jsonwebtoken';
 import cookie from 'cookie';
 import dotenv from 'dotenv';
+import userMiddleware from '../middlewares/user';
 import authMiddleware from '../middlewares/auth';
 
 dotenv.config();
@@ -109,9 +110,9 @@ const me = async (_: Request, res: Response) => {
 };
 
 const router = Router();
-router.post('/me', authMiddleware, me);
+router.post('/me', userMiddleware, authMiddleware, me);
 router.post('/login', login);
-router.post('/logout', authMiddleware, logout);
+router.post('/logout', userMiddleware, authMiddleware, logout);
 router.post('/register', register);
 
 export default router;

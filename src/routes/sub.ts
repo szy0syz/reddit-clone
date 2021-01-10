@@ -2,6 +2,7 @@ import { isEmpty } from 'class-validator';
 import { Request, Response, Router } from 'express';
 import User from '../entities/User';
 import { getRepository } from 'typeorm';
+import userMiddleware from '../middlewares/user';
 import authMiddleware from '../middlewares/auth';
 import Sub from '../entities/Sub';
 
@@ -42,6 +43,6 @@ const createSub = async (req: Request, res: Response) => {
 
 const router = Router();
 
-router.post('/', authMiddleware, createSub);
+router.post('/', userMiddleware, authMiddleware, createSub);
 
 export default router;
