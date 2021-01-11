@@ -76,7 +76,9 @@ export default function Home() {
               <label htmlFor="agreement" className="text-xs cursor-pointer">
                 I agree to get emails about cool stuff on Reddit
               </label>
-              <small className="block font-medium text-red-500">{errors.agreement}</small>
+              <small className="block font-medium text-red-500">
+                {errors.agreement}
+              </small>
             </div>
             <InputGroup
               placeholder="Email"

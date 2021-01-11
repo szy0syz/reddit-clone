@@ -1,10 +1,10 @@
-import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
-import Comment from './Comment';
-import BaseEntity from './Entity';
-import Post from './Post';
-import User from './User';
+import { Entity, Column, ManyToOne, JoinColumn } from "typeorm";
+import Comment from "./Comment";
+import BaseEntity from "./Entity";
+import Post from "./Post";
+import User from "./User";
 
-@Entity('votes')
+@Entity("votes")
 export default class Vote extends BaseEntity {
   constructor(vote: Partial<Vote>) {
     super();
@@ -15,7 +15,7 @@ export default class Vote extends BaseEntity {
   value: number;
 
   @ManyToOne(() => User)
-  @JoinColumn({ name: 'username', referencedColumnName: 'username' })
+  @JoinColumn({ name: "username", referencedColumnName: "username" })
   user: User;
 
   @Column()

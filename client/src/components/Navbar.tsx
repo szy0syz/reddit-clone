@@ -46,13 +46,18 @@ export const Navbar: React.FC = () => {
         {!loading &&
           (authenticated ? (
             // Show logout
-            <button className="w-32 py-1 mr-4 leading-5 hollow blue button" onClick={logout}>
+            <button
+              className="w-32 py-1 mr-4 leading-5 hollow blue button"
+              onClick={logout}
+            >
               Logout
             </button>
           ) : (
             <Fragment>
               <Link href="/login">
-                <a className="w-32 py-1 mr-4 leading-5 hollow blue button">log in</a>
+                <a className="w-32 py-1 mr-4 leading-5 hollow blue button">
+                  log in
+                </a>
               </Link>
               <Link href="/register">
                 <a className="w-32 py-1 leading-5 blue button">sign up</a>

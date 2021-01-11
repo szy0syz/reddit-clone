@@ -4,7 +4,7 @@ import Document, {
   Main,
   NextScript,
   DocumentContext,
-} from 'next/document';
+} from "next/document";
 
 class MyDocument extends Document {
   static async getInitialProps(ctx: DocumentContext) {
@@ -28,7 +28,7 @@ class MyDocument extends Document {
             crossOrigin="anonymous"
           />
         </Head>
-        <body className="font-body" style={{ backgroundColor: '#DAE0E6' }}>
+        <body className="font-body" style={{ backgroundColor: "#DAE0E6" }}>
           <Main />
           <NextScript />
         </body>

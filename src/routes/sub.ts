@@ -1,10 +1,10 @@
-import { isEmpty } from 'class-validator';
-import { Request, Response, Router } from 'express';
-import User from '../entities/User';
-import { getRepository } from 'typeorm';
-import userMiddleware from '../middlewares/user';
-import authMiddleware from '../middlewares/auth';
-import Sub from '../entities/Sub';
+import { isEmpty } from "class-validator";
+import { Request, Response, Router } from "express";
+import User from "../entities/User";
+import { getRepository } from "typeorm";
+import userMiddleware from "../middlewares/user";
+import authMiddleware from "../middlewares/auth";
+import Sub from "../entities/Sub";
 
 const createSub = async (req: Request, res: Response) => {
   const { name, title, description } = req.body;
@@ -13,15 +13,15 @@ const createSub = async (req: Request, res: Response) => {
 
   try {
     let errors: any = {};
-    if (isEmpty(name)) errors.name = 'Name muse not be empty';
-    if (isEmpty(title)) errors.title = 'Title muse not be empty';
+    if (isEmpty(name)) errors.name = "Name muse not be empty";
+    if (isEmpty(title)) errors.title = "Title muse not be empty";
 
     const sub = await getRepository(Sub)
-      .createQueryBuilder('sub')
-      .where('lower(sub.name) = :name', { name: name.toLowerCase() })
+      .createQueryBuilder("sub")
+      .where("lower(sub.name) = :name", { name: name.toLowerCase() })
       .getOne();
 
-    if (sub) errors.name = 'Sub exists already';
+    if (sub) errors.name = "Sub exists already";
 
     if (Object.keys(errors).length > 0) {
       throw errors;
@@ -37,12 +37,12 @@ const createSub = async (req: Request, res: Response) => {
     return res.json(sub);
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ error: 'Something went wrong' });
+    return res.status(500).json({ error: "Something went wrong" });
   }
 };
 
 const router = Router();
 
-router.post('/', userMiddleware, authMiddleware, createSub);
+router.post("/", userMiddleware, authMiddleware, createSub);
 
 export default router;

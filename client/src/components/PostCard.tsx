@@ -1,10 +1,10 @@
-import dayjs from 'dayjs';
-import React, { Fragment } from 'react';
-import Link from 'next/link';
-import relativeTime from 'dayjs/plugin/relativeTime';
-import Axios from 'axios';
-import classNames from 'classnames';
-import { Post } from '../types';
+import dayjs from "dayjs";
+import React, { Fragment } from "react";
+import Link from "next/link";
+import relativeTime from "dayjs/plugin/relativeTime";
+import Axios from "axios";
+import classNames from "classnames";
+import { Post } from "../types";
 
 dayjs.extend(relativeTime);
 
@@ -23,7 +23,7 @@ const ActionButton = ({ children }) => {
 export default function PostCard({ post }: PostCardProps) {
   const vote = async (value) => {
     try {
-      const res = await Axios.post('/misc/vote', {
+      const res = await Axios.post("/misc/vote", {
         value,
         slug: post.slug,
         identifier: post.identifier,
@@ -43,8 +43,8 @@ export default function PostCard({ post }: PostCardProps) {
           className="w-6 mx-auto text-gray-400 rounded cursor-pointer hover:bg-gray-300 hover:text-red-500"
         >
           <i
-            className={classNames('icon-arrow-up', {
-              'text-red-500': post.userVote === 1,
+            className={classNames("icon-arrow-up", {
+              "text-red-500": post.userVote === 1,
             })}
           ></i>
         </div>
@@ -55,8 +55,8 @@ export default function PostCard({ post }: PostCardProps) {
           className="w-6 mx-auto text-gray-400 rounded cursor-pointer hover:bg-gray-300 hover:text-blue-500"
         >
           <i
-            className={classNames('icon-arrow-down', {
-              'text-blue-600': post.userVote === -1,
+            className={classNames("icon-arrow-down", {
+              "text-blue-600": post.userVote === -1,
             })}
           ></i>
         </div>

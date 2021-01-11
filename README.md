@@ -99,7 +99,14 @@ export class User extends BaseEntity {
 - `npm run typeorm migration:generate -- --name create-users-table`
 
 ```ts
-import { BeforeInsert, Column, Entity, Index, JoinColumn, ManyToOne } from "typeorm";
+import {
+  BeforeInsert,
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+} from "typeorm";
 import { BaseEntity } from "typeorm";
 import { makeId } from "../utils/helpers";
 import Post from "./Post";
@@ -444,7 +451,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     loading: true,
   });
 
-  const dispatch = (type: string, payload?: any) => defauleDispatch({ type, payload });
+  const dispatch = (type: string, payload?: any) =>
+    defauleDispatch({ type, payload });
 
   useEffect(() => {
     async function loadUser() {

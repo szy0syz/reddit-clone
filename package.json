@@ -28,6 +28,7 @@
     "morgan": "^1.10.0",
     "nodemon": "^2.0.6",
     "pg": "^8.5.1",
+    "prettier": "^2.2.1",
     "reflect-metadata": "^0.1.10",
     "typeorm": "0.2.29"
   },
@@ -36,6 +37,9 @@
     "server": "nodemon --exec ts-node ./src/server.ts",
     "client": "cd client && npm run dev",
     "dev": "concurrently \"npm run server\" \"npm run client\" -n server,client",
-    "typeorm": "ts-node ./node_modules/typeorm/cli.js"
+    "typeorm": "ts-node ./node_modules/typeorm/cli.js",
+    "pretty:cli": "prettier --write \"./client/src/**/*.{js,jsx,ts,tsx,json}\"",
+    "pretty:serv": "prettier --write \"./src/**/*.{js,jsx,ts,tsx,json}\"",
+    "pretty": "concurrently \"npm run pretty:cli\" \"npm run pretty:serv\" -n pretty-cli,pretty-erv"
   }
 }

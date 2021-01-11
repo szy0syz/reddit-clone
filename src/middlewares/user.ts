@@ -1,6 +1,6 @@
-import jwt from 'jsonwebtoken';
-import User from '../entities/User';
-import { NextFunction, Response, Request } from 'express';
+import jwt from "jsonwebtoken";
+import User from "../entities/User";
+import { NextFunction, Response, Request } from "express";
 
 // * 只提取用户信息，不做任何强制性检查措施
 // * 没有就没有，我交控制器出去就完了
@@ -20,6 +20,6 @@ export default async (req: Request, res: Response, next: NextFunction) => {
     return next();
   } catch (error) {
     console.log(error);
-    return res.status(400).json({ error: 'Something went wrong' });
+    return res.status(400).json({ error: "Something went wrong" });
   }
 };

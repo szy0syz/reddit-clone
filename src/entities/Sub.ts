@@ -5,12 +5,12 @@ import {
   ManyToOne,
   JoinColumn,
   OneToMany,
-} from 'typeorm';
-import BaseEntity from './Entity';
-import Post from './Post';
-import User from './User';
+} from "typeorm";
+import BaseEntity from "./Entity";
+import Post from "./Post";
+import User from "./User";
 
-@Entity('subs')
+@Entity("subs")
 export default class Sub extends BaseEntity {
   constructor(sub: Partial<Sub>) {
     super();
@@ -24,7 +24,7 @@ export default class Sub extends BaseEntity {
   @Column()
   title: string;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: "text", nullable: true })
   description: string;
 
   @Column({ nullable: true })
@@ -34,7 +34,7 @@ export default class Sub extends BaseEntity {
   bannerUrn: string;
 
   @ManyToOne(() => User)
-  @JoinColumn({ name: 'username', referencedColumnName: 'username' })
+  @JoinColumn({ name: "username", referencedColumnName: "username" })
   user: User;
 
   @OneToMany(() => Post, (post) => post.sub)
