@@ -1,6 +1,6 @@
 {
-  "name": "new-typeorm-project",
-  "version": "0.0.1",
+  "name": "reddit-clone",
+  "version": "0.9.0",
   "description": "Awesome project developed with TypeORM.",
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",
