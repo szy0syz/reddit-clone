@@ -32,7 +32,6 @@ export default function Home() {
         username,
       });
       console.log(res);
-      debugger;
       router.push("/login");
     } catch (error) {
       console.error(error);

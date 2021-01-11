@@ -7,7 +7,7 @@ import { AuthProvider } from '../context/auth'
 import "../styles/tailwind.css";
 import "../styles/icons.css";
 
-Axios.defaults.baseURL = "http://localhost:5000/api";
+Axios.defaults.baseURL = "http://localhost:4000/api";
 Axios.defaults.withCredentials = true;
 
 function App({ Component, pageProps }: AppProps) {

@@ -9,7 +9,7 @@ export const Navbar: React.FC = () => {
   const { loading, authenticated } = useAuthState();
 
   const logout = () => {
-    Axios.get("/auth/logout")
+    Axios.post("/auth/logout")
       .then(() => {
         dispatch("LOGOUT");
         window.location.reload();

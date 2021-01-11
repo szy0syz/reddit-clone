@@ -110,7 +110,7 @@ const me = async (_: Request, res: Response) => {
 };
 
 const router = Router();
-router.post('/me', userMiddleware, authMiddleware, me);
+router.get('/me', userMiddleware, authMiddleware, me);
 router.post('/login', login);
 router.post('/logout', userMiddleware, authMiddleware, logout);
 router.post('/register', register);
