@@ -352,7 +352,7 @@ module.exports = {
 - 字体：
   - <https://fonts.google.com/>
   - tailwind.config.js
-  - \_document.tsx
+  - `_document.tsx` HEAD
 
 ```js
 fontFamily: {
