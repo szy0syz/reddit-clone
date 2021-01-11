@@ -1,15 +1,15 @@
-import Axios from 'axios';
-import Head from 'next/head';
-import { useEffect, useState } from 'react';
-import { Post } from '../types';
-import PostCard from '../components/PostCard';
+import Axios from "axios";
+import Head from "next/head";
+import { useEffect, useState } from "react";
+import { Post } from "../types";
+import PostCard from "../components/PostCard";
 // import { GetServerSideProps } from 'next';
 
 export default function Home() {
   const [posts, setPosts] = useState<Post[]>([]);
 
   useEffect(() => {
-    Axios.get('/posts')
+    Axios.get("/posts")
       .then((res) => setPosts(res.data))
       .catch((err) => console.log(err));
   }, []);

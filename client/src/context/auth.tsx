@@ -1,5 +1,4 @@
 import Axios from "axios";
-import { type } from "os";
 import React, { createContext, useContext, useEffect, useReducer } from "react";
 import { User } from "../types";
 
@@ -53,7 +52,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     loading: true,
   });
 
-  const dispatch = (type: string, payload?: any) => defauleDispatch({ type, payload });
+  const dispatch = (type: string, payload?: any) =>
+    defauleDispatch({ type, payload });
 
   // 首次加载 app，用 token 换取 userInfo
   useEffect(() => {
