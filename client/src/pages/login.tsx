@@ -1,23 +1,28 @@
-import Axios from 'axios';
-import { useRouter } from 'next/router';
-import Head from 'next/head';
-import Link from 'next/link';
-import { FormEvent, useState } from 'react';
-import InputGroup from '../components/InputGroup';
+import Axios from "axios";
+import { useRouter } from "next/router";
+import Head from "next/head";
+import Link from "next/link";
+import { FormEvent, useState } from "react";
+import InputGroup from "../components/InputGroup";
+import { useAuthDispatch, useAuthState } from "../context/auth";
 
 export default function Home() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<any>({});
 
   const router = useRouter();
+  const dispatch = useAuthDispatch();
+  const { authenticated } = useAuthState();
+
+  if (authenticated) router.push("/");
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
 
     try {
-      await Axios.post(
-        '/auth/login',
+      const res = await Axios.post(
+        "/auth/login",
         {
           password,
           username,
@@ -26,7 +31,10 @@ export default function Home() {
           withCredentials: true,
         }
       );
-      router.push('/');
+
+      dispatch("LOGIN", res.data);
+
+      router.push("/");
     } catch (error) {
       console.error(error);
       setErrors(error?.response?.data || {});
@@ -48,11 +56,11 @@ export default function Home() {
         <div className="w-70">
           <h1 className="mb-2 text-lg font-medium">Login</h1>
           <p className="mb-10 text-xs">
-            By continuing, you agree to our{' '}
+            By continuing, you agree to our{" "}
             <a href="#" className="text-blue-400">
               User Agreement
-            </a>{' '}
-            and{' '}
+            </a>{" "}
+            and{" "}
             <a href="#" className="text-blue-400">
               Privacy Policy
             </a>

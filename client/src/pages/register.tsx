@@ -1,35 +1,39 @@
-import Axios from 'axios';
-import { useRouter } from 'next/router';
-import Head from 'next/head';
-import Link from 'next/link';
-import { FormEvent, useState } from 'react';
-import InputGroup from '../components/InputGroup';
+import Axios from "axios";
+import { useRouter } from "next/router";
+import Head from "next/head";
+import Link from "next/link";
+import { FormEvent, useState } from "react";
+import InputGroup from "../components/InputGroup";
+import { useAuthState } from "../context/auth";
 
 export default function Home() {
-  const [email, setEmail] = useState('');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [agreement, setAgreement] = useState(false);
   const [errors, setErrors] = useState<any>({});
 
   const router = useRouter();
+  const { authenticated } = useAuthState();
+
+  if (authenticated) router.push("/");
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
 
     if (!agreement) {
-      return setErrors({ ...errors, agreement: '请同意相关条款' });
+      return setErrors({ ...errors, agreement: "请同意相关条款" });
     }
 
     try {
-      const res = await Axios.post('/auth/register', {
+      const res = await Axios.post("/auth/register", {
         email,
         password,
         username,
       });
       console.log(res);
-      debugger
-      router.push('/login');
+      debugger;
+      router.push("/login");
     } catch (error) {
       console.error(error);
       setErrors(error?.response?.data || {});
@@ -51,11 +55,11 @@ export default function Home() {
         <div className="w-70">
           <h1 className="mb-2 text-lg font-medium">Sign Up</h1>
           <p className="mb-10 text-xs">
-            By continuing, you agree to our{' '}
+            By continuing, you agree to our{" "}
             <a href="#" className="text-blue-400">
               User Agreement
-            </a>{' '}
-            and{' '}
+            </a>{" "}
+            and{" "}
             <a href="#" className="text-blue-400">
               Privacy Policy
             </a>
@@ -73,9 +77,7 @@ export default function Home() {
               <label htmlFor="agreement" className="text-xs cursor-pointer">
                 I agree to get emails about cool stuff on Reddit
               </label>
-              <small className="block font-medium text-red-500">
-                {errors.agreement}
-              </small>
+              <small className="block font-medium text-red-500">{errors.agreement}</small>
             </div>
             <InputGroup
               placeholder="Email"
