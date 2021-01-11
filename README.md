@@ -203,13 +203,13 @@ res.set(
 ![drawSQL](assets/drawSQL.png)
 
 ```ts
-import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
-import Comment from './Comment';
-import BaseEntity from './Entity';
-import Post from './Post';
-import User from './User';
+import { Entity, Column, ManyToOne, JoinColumn } from "typeorm";
+import Comment from "./Comment";
+import BaseEntity from "./Entity";
+import Post from "./Post";
+import User from "./User";
 
-@Entity('votes')
+@Entity("votes")
 export default class Vote extends BaseEntity {
   constructor(vote: Partial<Vote>) {
     super();
@@ -220,7 +220,7 @@ export default class Vote extends BaseEntity {
   value: number;
 
   @ManyToOne(() => User)
-  @JoinColumn({ name: 'username', referencedColumnName: 'username' })
+  @JoinColumn({ name: "username", referencedColumnName: "username" })
   user: User;
 
   @Column()
@@ -237,7 +237,7 @@ export default class Vote extends BaseEntity {
 - `npm run typeorm migration:generate -- --name create-votes-table`
 - `npm run typeorm migration:run`
 
-- **关于vote时是否用写的事务，还是用读的计算**
+- **关于 vote 时是否用写的事务，还是用读的计算**
   - 如果单机系统开事务就算了，如果分布式还是读的计算吧
 
 ```ts
@@ -310,7 +310,7 @@ const vote = async (req: Request, res: Response) => {
   post.setUserVote(user);
   post.comments.forEach((c) => c.setUserVote(user));
   // ...
-}
+};
 ```
 
 ### Client
@@ -434,4 +434,38 @@ module.exports = {
 
 - <https://icomoon.io/>
 
-> #11 5-49
+- 一个很典型的 context 用法
+
+```ts
+export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
+  const [state, defauleDispatch] = useReducer(reducer, {
+    user: null,
+    authenticated: false,
+    loading: true,
+  });
+
+  const dispatch = (type: string, payload?: any) => defauleDispatch({ type, payload });
+
+  useEffect(() => {
+    async function loadUser() {
+      try {
+        const res = await Axios.get("/auth/me");
+        dispatch("LOGIN", res.data);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        dispatch("STOP_LOADING");
+      }
+    }
+    loadUser();
+  }, []);
+
+  return (
+    <DispatchContext.Provider value={dispatch}>
+      <StateContext.Provider value={state}>{children}</StateContext.Provider>
+    </DispatchContext.Provider>
+  );
+};
+```
+
+> #12 0-0

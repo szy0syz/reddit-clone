@@ -55,7 +55,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const dispatch = (type: string, payload?: any) => defauleDispatch({ type, payload });
 
-  // 首次默认检查原token
+  // 首次加载 app，用 token 换取 userInfo
   useEffect(() => {
     async function loadUser() {
       try {
