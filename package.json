@@ -15,6 +15,7 @@
     "husky": "^4.3.7",
     "pretty-quick": "^3.1.0",
     "ts-node": "^9.0.0",
+    "typeorm-seeding": "^1.6.1",
     "typescript": "^4.1.2"
   },
   "dependencies": {
@@ -42,6 +43,7 @@
     "typeorm": "ts-node ./node_modules/typeorm/cli.js",
     "pretty:cli": "prettier --write \"./client/src/**/*.{js,jsx,ts,tsx,json}\"",
     "pretty:serv": "prettier --write \"./src/**/*.{js,jsx,ts,tsx,json}\"",
-    "pretty": "concurrently \"npm run pretty:cli\" \"npm run pretty:serv\" -n pretty-cli,pretty-erv"
+    "pretty": "concurrently \"npm run pretty:cli\" \"npm run pretty:serv\" -n pretty-cli,pretty-erv",
+    "seed": "ts-node ./node_modules/typeorm-seeding/dist/cli.js seed"
   }
 }

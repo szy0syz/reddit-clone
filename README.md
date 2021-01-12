@@ -329,6 +329,12 @@ const vote = async (req: Request, res: Response) => {
 > - 虽然原来做C#搞做面向对象，但后来做node和前端后，淡化了很多面向对象，实则也不怎么喜欢，后来就一直用 `FP` 的多。今天这个业务的小场景，把 `OOP` 面向对象的本质 **`“一个对象是拥有状态和行为的”`** 凸显的非常形象，也感觉到了它的魅力，真的感受到了对象的有了数据的流动，感受到它是个有 `血有肉的模型`。
 > - 再次感受到《微服务架构设计模式》中所提到的 `“没有银弹”` 的观点，只有最合适，没有最好！
 
+- typeorm-seeding `npm i -D typeorm-seeding`
+  - `/src/seeds/create-fake-data.ts`
+  - `ormconfig.json` - `"seeds": ["src/seeds/**/*{.ts,.js}"],`
+  - `package.json` - `"seed": "ts-node ./node_modules/typeorm-seeding/dist/cli.js seed"`
+  - `npm run seed` 执行所有 `seeds` 下文件
+
 * * *
 
 ### Client
