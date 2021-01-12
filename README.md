@@ -493,4 +493,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 };
 ```
 
-> #12 0-0
+- `npm i swr`
+
+> #13 8-0

@@ -30,7 +30,7 @@ app.get("/", (_, res) => res.send("hi~"));
 app.use("/api/auth", authRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/subs", subRoutes);
-app.use("/api/miscRoutes", miscRoutes);
+app.use("/api/misc", miscRoutes);
 
 app.listen(process.env.PORT, async () => {
   console.log(`Server running at http://localhost:${process.env.PORT}`);

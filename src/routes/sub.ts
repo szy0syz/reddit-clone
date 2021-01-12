@@ -5,6 +5,7 @@ import { getRepository } from "typeorm";
 import userMiddleware from "../middlewares/user";
 import authMiddleware from "../middlewares/auth";
 import Sub from "../entities/Sub";
+import Post from "../entities/Post";
 
 const createSub = async (req: Request, res: Response) => {
   const { name, title, description } = req.body;
@@ -41,8 +42,32 @@ const createSub = async (req: Request, res: Response) => {
   }
 };
 
+const getSub = async (req: Request, res: Response) => {
+  const name = req.params.name;
+
+  try {
+    const sub = await Sub.findOneOrFail({ name });
+    const posts = await Post.find({
+      where: { sub },
+      order: { createdAt: "DESC" },
+      relations: ["comments", "votes"],
+    });
+
+    sub.posts = posts;
+
+    if (res.locals.user) {
+      sub.posts.forEach((p) => p.setUserVote(res.locals.user));
+    }
+
+    return res.json(sub);
+  } catch (error) {
+    return res.status(500).json({ error: "Something went wrong" });
+  }
+};
+
 const router = Router();
 
+router.get("/:name", userMiddleware, authMiddleware, getSub);
 router.post("/", userMiddleware, authMiddleware, createSub);
 
 export default router;

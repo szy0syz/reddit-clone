@@ -1,18 +1,20 @@
-import Axios from "axios";
+// import Axios from "axios";
 import Head from "next/head";
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
 import { Post } from "../types";
 import PostCard from "../components/PostCard";
+import useSWR from "swr";
 // import { GetServerSideProps } from 'next';
 
 export default function Home() {
-  const [posts, setPosts] = useState<Post[]>([]);
+  // const [posts, setPosts] = useState<Post[]>([]);
 
-  useEffect(() => {
-    Axios.get("/posts")
-      .then((res) => setPosts(res.data))
-      .catch((err) => console.log(err));
-  }, []);
+  // useEffect(() => {
+  //   Axios.get("/posts")
+  //     .then((res) => setPosts(res.data))
+  //     .catch((err) => console.log(err));
+  // }, []);
+  const { data: posts } = useSWR("/posts");
 
   return (
     <div className="pt-12">
@@ -23,7 +25,7 @@ export default function Home() {
         <div className="container flex pt-4">
           {/* Posts feed */}
           <div className="w-160">
-            {posts.map((post) => (
+            {posts?.map((post) => (
               <PostCard post={post} key={post.identifier} />
             ))}
           </div>
