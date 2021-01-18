@@ -495,4 +495,36 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
 - `npm i swr`
 
-> #13 8-0
+```ts
+// ---- _app.tsx ----
+const fetcher = async (url: string) => {
+  try {
+    const res = await Axios.get(url);
+    return res.data;
+  } catch (error) {
+    // swr 会接住这个异常
+    throw error.response.data;
+  }
+};
+
+function App({ Component, pageProps }: AppProps) {
+  const { pathname } = useRouter();
+  const authRoutes = ["/register", "/login"];
+  const authRoute = authRoutes.includes(pathname);
+
+  return (
+    <SWRConfig
+      value={{
+        fetcher,
+        dedupingInterval: 10 * 1000,
+      }}
+    >
+      <AuthProvider>
+       {/* ... */}
+      </AuthProvider>
+    </SWRConfig>
+  );
+}
+```
+
+> #14 0-0

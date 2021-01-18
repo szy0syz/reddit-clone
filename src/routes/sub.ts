@@ -1,11 +1,11 @@
-import { isEmpty } from "class-validator";
-import { Request, Response, Router } from "express";
 import User from "../entities/User";
-import { getRepository } from "typeorm";
-import userMiddleware from "../middlewares/user";
-import authMiddleware from "../middlewares/auth";
 import Sub from "../entities/Sub";
 import Post from "../entities/Post";
+import { getRepository } from "typeorm";
+import { isEmpty } from "class-validator";
+import userMiddleware from "../middlewares/user";
+import authMiddleware from "../middlewares/auth";
+import { Request, Response, Router } from "express";
 
 const createSub = async (req: Request, res: Response) => {
   const { name, title, description } = req.body;
@@ -61,7 +61,7 @@ const getSub = async (req: Request, res: Response) => {
 
     return res.json(sub);
   } catch (error) {
-    return res.status(500).json({ error: "Something went wrong" });
+    return res.status(404).json({ error: "Sub not found" });
   }
 };
 

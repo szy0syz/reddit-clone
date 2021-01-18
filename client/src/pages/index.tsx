@@ -4,6 +4,7 @@ import Head from "next/head";
 import { Post } from "../types";
 import PostCard from "../components/PostCard";
 import useSWR from "swr";
+import { Fragment } from "react";
 // import { GetServerSideProps } from 'next';
 
 export default function Home() {
@@ -17,7 +18,7 @@ export default function Home() {
   const { data: posts } = useSWR("/posts");
 
   return (
-    <div className="pt-12">
+    <Fragment>
       <Head>
         <title>readit: the front page of the internet</title>
       </Head>
@@ -32,7 +33,7 @@ export default function Home() {
           {/* Siderbar */}
         </div>
       </div>
-    </div>
+    </Fragment>
   );
 }
 
