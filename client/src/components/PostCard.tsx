@@ -80,7 +80,7 @@ export default function PostCard({ post }: PostCardProps) {
             Posted by
             <Link href={`{/u/${post.username}}`}>
               <a href="" className="mx-1 hover:underline">
-                /u/post.username
+                {post.username}
               </a>
             </Link>
             <Link href={post.url}>
@@ -93,7 +93,7 @@ export default function PostCard({ post }: PostCardProps) {
         <Link href={post.url}>
           <a className="my-1 text-lg font-medium">{post.title}</a>
         </Link>
-        {post.body && <p className="my-1 text-sm">post.body</p>}
+        {post.body && <p className="my-1 text-sm">{post.body}</p>}
         <div className="flex">
           <Link href={post.url}>
             <a>
