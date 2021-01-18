@@ -3,8 +3,8 @@ import Sub from "../entities/Sub";
 import Post from "../entities/Post";
 import { getRepository } from "typeorm";
 import { isEmpty } from "class-validator";
-import userMiddleware from "../middlewares/user";
-import authMiddleware from "../middlewares/auth";
+import userMid from "../middlewares/user";
+import authMid from "../middlewares/auth";
 import { Request, Response, Router } from "express";
 
 const createSub = async (req: Request, res: Response) => {
@@ -67,7 +67,7 @@ const getSub = async (req: Request, res: Response) => {
 
 const router = Router();
 
-router.get("/:name", userMiddleware, authMiddleware, getSub);
-router.post("/", userMiddleware, authMiddleware, createSub);
+router.get("/:name", userMid, getSub);
+router.post("/", userMid, authMid, createSub);
 
 export default router;

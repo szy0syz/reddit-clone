@@ -2,8 +2,8 @@ import { Request, Response, Router } from "express";
 import Comment from "../entities/Comment";
 import Post from "../entities/Post";
 import Sub from "../entities/Sub";
-import userMiddleware from "../middlewares/user";
-import authMiddleware from "../middlewares/auth";
+import userMid from "../middlewares/user";
+import authMid from "../middlewares/auth";
 
 const createPost = async (req: Request, res: Response) => {
   const { title, body, sub } = req.body;
@@ -82,14 +82,14 @@ const commentOnPost = async (req: Request, res: Response) => {
 
 const router = Router();
 
-router.get("/:identifier/:slug", userMiddleware, authMiddleware, getPost);
+router.get("/:identifier/:slug", userMid, authMid, getPost);
 router.get(
   "/:identifier/:slug/comments",
-  userMiddleware,
-  authMiddleware,
+  userMid,
+  authMid,
   commentOnPost
 );
-router.get("/", userMiddleware, getPosts);
-router.post("/", userMiddleware, authMiddleware, createPost);
+router.get("/", userMid, getPosts);
+router.post("/", userMid, authMid, createPost);
 
 export default router;
