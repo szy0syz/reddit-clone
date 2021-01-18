@@ -459,8 +459,35 @@ module.exports = {
 - <https://icomoon.io/>
 
 - 一个很典型的 context 用法
+  - 使用炒鸡方便
+  - 把困扰我很久的一个 `/currentUser` 给解决了
 
 ```ts
+// ---- /src/context/auth.tsx ----
+const reducer = (state: State, { type, payload }: Action) => {
+  switch (type) {
+    case "LOGIN":
+      return {
+        ...state,
+        authenticated: true,
+        user: payload,
+      };
+    case "LOGOUT":
+      return {
+        ...state,
+        authenticated: false,
+        user: null,
+      };
+    case "STOP_LOADING":
+      return {
+        ...state,
+        loading: false,
+      };
+    default:
+      throw new Error(`Unknow action type: ${type}`);
+  }
+};
+
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [state, defauleDispatch] = useReducer(reducer, {
     user: null,
@@ -471,6 +498,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const dispatch = (type: string, payload?: any) =>
     defauleDispatch({ type, payload });
 
+  // 首次加载 app，用 token 换取 userInfo
   useEffect(() => {
     async function loadUser() {
       try {
@@ -491,6 +519,22 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     </DispatchContext.Provider>
   );
 };
+```
+
+```ts
+// ---- /src/pages/login.tsx ----
+import { useAuthDispatch, useAuthState } from "../context/auth";
+
+export default function Home() {
+  const dispatch = useAuthDispatch();
+  const { authenticated } = useAuthState();
+
+  const handleSubmit = () => {
+    // ...
+    dispatch("LOGIN", res.data);
+    // ...
+  }
+}
 ```
 
 - `npm i swr`

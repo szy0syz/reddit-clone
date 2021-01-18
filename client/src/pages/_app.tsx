@@ -5,8 +5,8 @@ import { useRouter } from "next/router";
 import { AuthProvider } from "../context/auth";
 import { SWRConfig } from "swr";
 
-import "../styles/tailwind.css";
 import "../styles/icons.css";
+import "../styles/tailwind.css";
 
 Axios.defaults.baseURL = "http://localhost:4000/api";
 Axios.defaults.withCredentials = true;
