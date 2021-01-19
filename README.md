@@ -571,4 +571,47 @@ function App({ Component, pageProps }: AppProps) {
 }
 ```
 
+- 无限加载
+
+```ts
+const {
+    data,
+    error,
+    size: page,
+    setSize: setPage,
+    isValidating,
+    revalidate
+  } = useSWRInfinite<Post[]>((index) => `/posts?page=${index}`);
+
+  const posts: Post[] = data ? [].concat(...data) : [];
+  // const isLoadingInitialData = !data && !error;
+
+  useEffect(() => {
+    if (!posts || posts.length === 0) return;
+
+    const id = posts[posts.length - 1].identifier;
+
+    if (id !== observedPost) {
+      setObservedPost(id);
+      observeElement(document.getElementById(id));
+    }
+  }, [posts]);
+
+  const observeElement = (element: HTMLElement) => {
+    if (!element) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting === true) {
+          console.log("Reached bottom of post");
+          setPage(page + 1);
+          observer.unobserve(element);
+        }
+      },
+      { threshold: 1 } // 0 -> top, 1 -> bottom
+    );
+    observer.observe(element);
+  };
+```
+
 > #14 0-0

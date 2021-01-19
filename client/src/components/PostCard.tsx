@@ -33,7 +33,7 @@ export default function PostCard({ post, revalidate }: PostCardProps) {
     if (value === post.userVote) value = 0;
 
     try {
-      const res = await Axios.post("/misc/vote", {
+      await Axios.post("/misc/vote", {
         value,
         slug: post.slug,
         identifier: post.identifier,
