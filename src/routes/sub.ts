@@ -5,7 +5,10 @@ import { getRepository } from "typeorm";
 import { isEmpty } from "class-validator";
 import userMid from "../middlewares/user";
 import authMid from "../middlewares/auth";
-import { Request, Response, Router } from "express";
+import multer, { FileFilterCallback } from "multer";
+import path from "path";
+import { NextFunction, Request, Response, Router } from "express";
+import { makeId } from "../utils/helpers";
 
 const createSub = async (req: Request, res: Response) => {
   const { name, title, description } = req.body;
@@ -65,9 +68,57 @@ const getSub = async (req: Request, res: Response) => {
   }
 };
 
+const ownSub = async (req: Request, res: Response, next: NextFunction) => {
+  const user: User = res.locals.user;
+
+  try {
+    const sub = await Sub.findOneOrFail({ where: { name: req.params.name } });
+
+    if (sub.username !== user.username) {
+      return res.status(403).json({ error: "You dont own this sub" });
+    }
+
+    res.locals.sub = sub;
+
+    return next();
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Something went wrong" });
+  }
+};
+
+const upload = multer({
+  storage: multer.diskStorage({
+    destination: "public/images",
+    filename: (_, file, callback) => {
+      const name = makeId(15);
+      callback(null, name + path.extname(file.originalname));
+    },
+  }),
+  fileFilter: (_, file: any, callback: FileFilterCallback) => {
+    if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
+      callback(null, true);
+    } else {
+      callback(new Error("Not an image"));
+    }
+  },
+});
+
+const uploadSubImage = async (_: Request, res: Response) => {
+  res.json({ success: true });
+};
+
 const router = Router();
 
 router.get("/:name", userMid, getSub);
 router.post("/", userMid, authMid, createSub);
+router.post(
+  "/:name/upload",
+  userMid,
+  authMid,
+  ownSub,
+  upload.single("file"),
+  uploadSubImage
+);
 
 export default router;

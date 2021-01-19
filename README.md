@@ -335,6 +335,10 @@ const vote = async (req: Request, res: Response) => {
   - `package.json` - `"seed": "ts-node ./node_modules/typeorm-seeding/dist/cli.js seed"`
   - `npm run seed` 执行所有 `seeds` 下文件
 
+- 后端文件上传处理
+  - `npm i -S multer`
+  - `npm i -D @types/multer`
+
 * * *
 
 ### Client

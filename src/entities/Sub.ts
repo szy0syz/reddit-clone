@@ -33,6 +33,10 @@ export default class Sub extends BaseEntity {
   @Column({ nullable: true })
   bannerUrn: string;
 
+  // * 从哪里来，从 @ManyToOne(() => User) 这里来
+  @Column()
+  username: string;
+
   @ManyToOne(() => User)
   @JoinColumn({ name: "username", referencedColumnName: "username" })
   user: User;
