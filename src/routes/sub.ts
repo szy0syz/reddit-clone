@@ -7,6 +7,7 @@ import userMid from "../middlewares/user";
 import authMid from "../middlewares/auth";
 import multer, { FileFilterCallback } from "multer";
 import path from "path";
+import fs from 'fs';
 import { NextFunction, Request, Response, Router } from "express";
 import { makeId } from "../utils/helpers";
 
@@ -104,8 +105,43 @@ const upload = multer({
   },
 });
 
-const uploadSubImage = async (_: Request, res: Response) => {
-  res.json({ success: true });
+const uploadSubImage = async (req: Request, res: Response) => {
+  const sub: Sub = res.locals.sub;
+  try {
+    const type = req.body.type;
+
+    // 如果用户上传了图片，但没指名type则删除文件
+    // 完全没必要后判断，可以提前判断就不必要传文件了
+    if (type !== "image" && type !== "banner") {
+      // 竟然会自动加 dirname / pwd
+      fs.unlinkSync(req.file.path);
+      return res.status(400).json({ error: "Invalid type" });
+    }
+
+    let oldImageUrn: string = '';
+
+    if (type === "iamge") {
+      // 新的urn即将来临，提前存好老的urn
+      oldImageUrn = sub.imageUrn || '';
+      // 覆盖老的urn
+      sub.imageUrn = req.file.filename;
+    } else if (type === "banner") {
+      oldImageUrn = sub.imageUrn || '';
+      sub.bannerUrn = req.file.filename;
+    }
+
+    await sub.save();
+
+    if (oldImageUrn !== '') {
+      // 删除原来的图片文件
+      fs.unlinkSync(oldImageUrn);
+    }
+
+    return res.json(sub);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Something went wrong" });
+  }
 };
 
 const router = Router();
