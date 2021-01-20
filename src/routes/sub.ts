@@ -7,7 +7,7 @@ import userMid from "../middlewares/user";
 import authMid from "../middlewares/auth";
 import multer, { FileFilterCallback } from "multer";
 import path from "path";
-import fs from 'fs';
+import fs from "fs";
 import { NextFunction, Request, Response, Router } from "express";
 import { makeId } from "../utils/helpers";
 
@@ -114,27 +114,36 @@ const uploadSubImage = async (req: Request, res: Response) => {
     // 完全没必要后判断，可以提前判断就不必要传文件了
     if (type !== "image" && type !== "banner") {
       // 竟然会自动加 dirname / pwd
+      // 因为是通过 multer 封装的 file 对象是带文件路径的
       fs.unlinkSync(req.file.path);
       return res.status(400).json({ error: "Invalid type" });
     }
 
-    let oldImageUrn: string = '';
+    let oldImageUrn: string = "";
 
     if (type === "iamge") {
       // 新的urn即将来临，提前存好老的urn
-      oldImageUrn = sub.imageUrn || '';
+      oldImageUrn = sub.imageUrn || "";
       // 覆盖老的urn
       sub.imageUrn = req.file.filename;
     } else if (type === "banner") {
-      oldImageUrn = sub.imageUrn || '';
+      oldImageUrn = sub.imageUrn || "";
       sub.bannerUrn = req.file.filename;
     }
 
     await sub.save();
 
-    if (oldImageUrn !== '') {
-      // 删除原来的图片文件
-      fs.unlinkSync(oldImageUrn);
+    // 删除原来没用的图片文件
+    if (oldImageUrn !== "") {
+      // 因为数据库存的只是 filename，得自己加上对象路径前缀
+      // 兼容 Linux 和 Windows
+      const fullFilaName = path.resolve(
+        __dirname,
+        "public",
+        "images",
+        oldImageUrn
+      );
+      fs.unlinkSync(fullFilaName);
     }
 
     return res.json(sub);
