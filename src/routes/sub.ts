@@ -93,11 +93,11 @@ const upload = multer({
     destination: "public/images",
     filename: (_, file, callback) => {
       const name = makeId(15);
-      callback(null, name + path.extname(file.originalname));
+      callback(null, name + path.extname(file.originalname)); // e.g. jh34gh2v4y + .png
     },
   }),
   fileFilter: (_, file: any, callback: FileFilterCallback) => {
-    if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
+    if (file.mimetype == "image/jpeg" || file.mimetype == "image/png") {
       callback(null, true);
     } else {
       callback(new Error("Not an image"));
@@ -113,6 +113,10 @@ const uploadSubImage = async (req: Request, res: Response) => {
     // 如果用户上传了图片，但没指名type则删除文件
     // 完全没必要后判断，可以提前判断就不必要传文件了
     if (type !== "image" && type !== "banner") {
+      if (!req.file?.path) {
+        return res.status(400).json({ error: "Invalid file" });
+      }
+
       // 竟然会自动加 dirname / pwd
       // 因为是通过 multer 封装的 file 对象是带文件路径的
       fs.unlinkSync(req.file.path);
@@ -127,7 +131,8 @@ const uploadSubImage = async (req: Request, res: Response) => {
       // 覆盖老的urn
       sub.imageUrn = req.file.filename;
     } else if (type === "banner") {
-      oldImageUrn = sub.imageUrn || "";
+      // banner 和 image 不同
+      oldImageUrn = sub.bannerUrn || "";
       sub.bannerUrn = req.file.filename;
     }
 
@@ -138,11 +143,12 @@ const uploadSubImage = async (req: Request, res: Response) => {
       // 因为数据库存的只是 filename，得自己加上对象路径前缀
       // 兼容 Linux 和 Windows
       const fullFilaName = path.resolve(
-        __dirname,
+        process.cwd(),
         "public",
         "images",
         oldImageUrn
       );
+
       fs.unlinkSync(fullFilaName);
     }
 

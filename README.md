@@ -268,8 +268,8 @@ votes: Vote[];
 ```
 
 > - 某些敏感表，不用 `userId` 外链，而是用加了索引的 `username` 外联，非常巧啊
-> - 另外这里计算voteScore时，把 **`写复杂`** 降维到 **`读复杂`**，很有味道啊
-> - 很有　🐗🐗🐗 “野猪书”🐗🐗🐗 　的感觉
+> - 另外这里计算 voteScore 时，把 **`写复杂`** 降维到 **`读复杂`**，很有味道啊
+> - 很有　 🐗🐗🐗 “野猪书”🐗🐗🐗 　的感觉
 
 - `写复杂`时，需要并行多个事务来解决写问题 ！！！
 
@@ -326,20 +326,59 @@ const vote = async (req: Request, res: Response) => {
 >
 > - 拆分成做两件事的中间件：前一个只拿 `token` 换 `User`，后一个只强制检查 `User` 即可
 > - 充分利用面向对象的充血模型，把 `Entity` 写得成富有 **`“数据”`** 流动型，这也符合人脑的单核思维模式 —— 把相关的事务放一起考虑。
-> - 虽然原来做C#搞做面向对象，但后来做node和前端后，淡化了很多面向对象，实则也不怎么喜欢，后来就一直用 `FP` 的多。今天这个业务的小场景，把 `OOP` 面向对象的本质 **`“一个对象是拥有状态和行为的”`** 凸显的非常形象，也感觉到了它的魅力，真的感受到了对象的有了数据的流动，感受到它是个有 `血有肉的模型`。
+> - 虽然原来做 C#搞做面向对象，但后来做 node 和前端后，淡化了很多面向对象，实则也不怎么喜欢，后来就一直用 `FP` 的多。今天这个业务的小场景，把 `OOP` 面向对象的本质 **`“一个对象是拥有状态和行为的”`** 凸显的非常形象，也感觉到了它的魅力，真的感受到了对象的有了数据的流动，感受到它是个有 `血有肉的模型`。
 > - 再次感受到《微服务架构设计模式》中所提到的 `“没有银弹”` 的观点，只有最合适，没有最好！
 
 - typeorm-seeding `npm i -D typeorm-seeding`
+
   - `/src/seeds/create-fake-data.ts`
   - `ormconfig.json` - `"seeds": ["src/seeds/**/*{.ts,.js}"],`
   - `package.json` - `"seed": "ts-node ./node_modules/typeorm-seeding/dist/cli.js seed"`
   - `npm run seed` 执行所有 `seeds` 下文件
 
 - 后端文件上传处理
+
   - `npm i -S multer`
   - `npm i -D @types/multer`
 
-* * *
+- 后端处理上传 sub 的图片逻辑
+
+```ts
+// 如果用户上传了图片，但没指名type则删除文件
+// 完全没必要后判断，可以提前判断就不必要传文件了
+if (type !== "image" && type !== "banner") {
+  // 竟然会自动加 dirname / pwd
+  // 因为是通过 multer 封装的 file 对象是带文件路径的
+  fs.unlinkSync(req.file.path);
+  return res.status(400).json({ error: "Invalid type" });
+}
+
+let oldImageUrn: string = "";
+
+if (type === "iamge") {
+  // 新的urn即将来临，提前存好老的urn
+  oldImageUrn = sub.imageUrn || "";
+  // 覆盖老的urn
+  sub.imageUrn = req.file.filename;
+} else if (type === "banner") {
+  oldImageUrn = sub.imageUrn || "";
+  sub.bannerUrn = req.file.filename;
+}
+
+await sub.save();
+
+// 删除原来没用的图片文件
+if (oldImageUrn !== "") {
+  // 因为数据库存的只是 filename，得自己加上对象路径前缀
+  // 兼容 Linux 和 Windows
+  const fullFilaName = path.resolve(__dirname, "public", "images", oldImageUrn);
+  fs.unlinkSync(fullFilaName);
+}
+```
+
+- **`以后数据库存文件相对路径url或urn，一定不能以 "/" 开头，要不然就会被认为是绝对路径坑人`**
+
+---
 
 ### Client
 
@@ -537,7 +576,7 @@ export default function Home() {
     // ...
     dispatch("LOGIN", res.data);
     // ...
-  }
+  };
 }
 ```
 
@@ -567,9 +606,7 @@ function App({ Component, pageProps }: AppProps) {
         dedupingInterval: 10 * 1000,
       }}
     >
-      <AuthProvider>
-       {/* ... */}
-      </AuthProvider>
+      <AuthProvider>{/* ... */}</AuthProvider>
     </SWRConfig>
   );
 }
@@ -579,83 +616,43 @@ function App({ Component, pageProps }: AppProps) {
 
 ```ts
 const {
-    data,
-    error,
-    size: page,
-    setSize: setPage,
-    isValidating,
-    revalidate
-  } = useSWRInfinite<Post[]>((index) => `/posts?page=${index}`);
+  data,
+  error,
+  size: page,
+  setSize: setPage,
+  isValidating,
+  revalidate,
+} = useSWRInfinite<Post[]>((index) => `/posts?page=${index}`);
 
-  const posts: Post[] = data ? [].concat(...data) : [];
-  // const isLoadingInitialData = !data && !error;
+const posts: Post[] = data ? [].concat(...data) : [];
+// const isLoadingInitialData = !data && !error;
 
-  useEffect(() => {
-    if (!posts || posts.length === 0) return;
+useEffect(() => {
+  if (!posts || posts.length === 0) return;
 
-    const id = posts[posts.length - 1].identifier;
+  const id = posts[posts.length - 1].identifier;
 
-    if (id !== observedPost) {
-      setObservedPost(id);
-      observeElement(document.getElementById(id));
-    }
-  }, [posts]);
+  if (id !== observedPost) {
+    setObservedPost(id);
+    observeElement(document.getElementById(id));
+  }
+}, [posts]);
 
-  const observeElement = (element: HTMLElement) => {
-    if (!element) return;
+const observeElement = (element: HTMLElement) => {
+  if (!element) return;
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting === true) {
-          console.log("Reached bottom of post");
-          setPage(page + 1);
-          observer.unobserve(element);
-        }
-      },
-      { threshold: 1 } // 0 -> top, 1 -> bottom
-    );
-    observer.observe(element);
-  };
-```
-
-- 后端处理上传 sub 的图片逻辑
-
-```ts
-// 如果用户上传了图片，但没指名type则删除文件
-// 完全没必要后判断，可以提前判断就不必要传文件了
-if (type !== "image" && type !== "banner") {
-  // 竟然会自动加 dirname / pwd
-  // 因为是通过 multer 封装的 file 对象是带文件路径的
-  fs.unlinkSync(req.file.path);
-  return res.status(400).json({ error: "Invalid type" });
-}
-
-let oldImageUrn: string = "";
-
-if (type === "iamge") {
-  // 新的urn即将来临，提前存好老的urn
-  oldImageUrn = sub.imageUrn || "";
-  // 覆盖老的urn
-  sub.imageUrn = req.file.filename;
-} else if (type === "banner") {
-  oldImageUrn = sub.imageUrn || "";
-  sub.bannerUrn = req.file.filename;
-}
-
-await sub.save();
-
-// 删除原来没用的图片文件
-if (oldImageUrn !== "") {
-  // 因为数据库存的只是 filename，得自己加上对象路径前缀
-  // 兼容 Linux 和 Windows
-  const fullFilaName = path.resolve(
-    __dirname,
-    "public",
-    "images",
-    oldImageUrn
+  const observer = new IntersectionObserver(
+    (entries) => {
+      if (entries[0].isIntersecting === true) {
+        console.log("Reached bottom of post");
+        setPage(page + 1);
+        observer.unobserve(element);
+      }
+    },
+    { threshold: 1 } // 0 -> top, 1 -> bottom
   );
-  fs.unlinkSync(fullFilaName);
-}
+  observer.observe(element);
+};
 ```
 
 > #15 13-21
