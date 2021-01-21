@@ -26,7 +26,9 @@ app.use(
   })
 );
 
-app.get("/", (_, res) => res.send("hi~"));
+app.use(express.static('public'))
+
+app.get("/", (_, res) => res.send("running"));
 app.use("/api/auth", authRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/subs", subRoutes);

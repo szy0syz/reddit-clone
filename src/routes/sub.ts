@@ -125,7 +125,7 @@ const uploadSubImage = async (req: Request, res: Response) => {
 
     let oldImageUrn: string = "";
 
-    if (type === "iamge") {
+    if (type === "image") {
       // 新的urn即将来临，提前存好老的urn
       oldImageUrn = sub.imageUrn || "";
       // 覆盖老的urn
@@ -135,7 +135,6 @@ const uploadSubImage = async (req: Request, res: Response) => {
       oldImageUrn = sub.bannerUrn || "";
       sub.bannerUrn = req.file.filename;
     }
-
     await sub.save();
 
     // 删除原来没用的图片文件
