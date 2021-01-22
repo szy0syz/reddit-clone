@@ -32,6 +32,7 @@ export interface Sub {
   bannerUrn: string
   username: string
   posts: Post[]
+  postCount?: string
 
   // Virtuals
   imageUrl: string

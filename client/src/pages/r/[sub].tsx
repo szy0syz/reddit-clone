@@ -6,6 +6,7 @@ import { Sub } from "../../types";
 import { useRouter } from "next/router";
 import PostCard from "../../components/PostCard";
 import { useAuthState } from "../../context/auth";
+import Sidebar from "../../components/Sidebar";
 import { ChangeEvent, createRef, Fragment, useEffect, useState } from "react";
 import Axios from "axios";
 
@@ -20,7 +21,9 @@ export default function SubPage() {
   const router = useRouter();
   const subName = router.query.sub;
   const fileInputRef = createRef<HTMLInputElement>();
-  const { data: sub, error, revalidate } = useSWR<Sub>(subName ? `/subs/${subName}` : null);
+  const { data: sub, error, revalidate } = useSWR<Sub>(
+    subName ? `/subs/${subName}` : null
+  );
 
   useEffect(() => {
     if (!sub) return;
@@ -31,24 +34,24 @@ export default function SubPage() {
     if (!ownSub) return;
     fileInputRef.current.name = type;
     fileInputRef.current.click();
-  }
+  };
 
   const uploadImage = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files[0];
 
     const formData = new FormData();
-    formData.append('file', file);
-    formData.append('type', fileInputRef.current.name);
+    formData.append("file", file);
+    formData.append("type", fileInputRef.current.name);
 
     try {
       await Axios.post<Sub>(`/subs/${sub.name}/upload`, formData, {
-        headers: { 'Context-Type': 'multipart/form-data' }
-      })
+        headers: { "Context-Type": "multipart/form-data" },
+      });
       revalidate();
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   if (error) router.push("/");
 
@@ -71,7 +74,12 @@ export default function SubPage() {
 
       {sub && (
         <Fragment>
-          <input type="file" hidden={true} ref={fileInputRef}  onChange={uploadImage}/>
+          <input
+            type="file"
+            hidden={true}
+            ref={fileInputRef}
+            onChange={uploadImage}
+          />
           {/* Sub info and images */}
           <div>
             {/* Banner image */}
@@ -85,7 +93,7 @@ export default function SubPage() {
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                   }}
-                  onClick={() => openFileInput('banner')}
+                  onClick={() => openFileInput("banner")}
                 ></div>
               ) : (
                 <div className="h-20 bg-blue-500"></div>
@@ -101,8 +109,10 @@ export default function SubPage() {
                       alt=""
                       width={70}
                       height={70}
-                      onClick={() => openFileInput('image')}
-                      className={cls("rounded-full", { "cursor-pointer": ownSub })}
+                      onClick={() => openFileInput("image")}
+                      className={cls("rounded-full", {
+                        "cursor-pointer": ownSub,
+                      })}
                     />
                   )}
                 </div>
@@ -119,7 +129,8 @@ export default function SubPage() {
           </div>
           {/* Posts & Sidebar */}
           <div className="container flex pt-5">
-            {sub && <div className="w-160">{postsMarkup}</div>}
+            <div className="w-160">{postsMarkup}</div>
+            <Sidebar sub={sub} />
           </div>
         </Fragment>
       )}

@@ -1,0 +1,49 @@
+### REST Client ###
+
+@baseUrl = http://localhost:4000
+
+# @name signin
+POST {{baseUrl}}/api/auth/login HTTP/1.1
+Content-Type: application/json
+
+{
+    "username": "jane",
+    "password": "123456"
+}
+
+
+### --------------------------------【Subs】top subs
+GET {{baseUrl}}/api/misc/topSubs
+Content-Type: application/json
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### --------------------------------【资料分组】检索
+GET {{baseUrl}}/api/v1/ietmGroups
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+
+### --------------------------------【资料分组】创建
+POST {{baseUrl}}/api/v1/ietmGroups
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "sn": "1",
+    "title": "所有分类"
+}
