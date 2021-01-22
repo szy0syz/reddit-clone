@@ -35,7 +35,7 @@ const getPosts = async (req: Request, res: Response) => {
       order: { createdAt: "DESC" },
       relations: ["sub", "votes", "comments"],
       skip: currentPage * perPage,
-      take: perPage
+      take: perPage,
     });
 
     if (res.locals.user) {
@@ -54,8 +54,12 @@ const getPost = async (req: Request, res: Response) => {
   try {
     const post = await Post.findOneOrFail(
       { identifier, slug },
-      { relations: ["sub"] }
+      { relations: ["sub", "votes"] }
     );
+
+    if (res.locals.user) {
+      post.setUserVote(res.locals.user);
+    }
 
     return res.json(post);
   } catch (error) {
@@ -76,6 +80,10 @@ const commentOnPost = async (req: Request, res: Response) => {
       post,
     });
 
+    if (res.locals.user) {
+      post.setUserVote(res.locals.user);
+    }
+
     await comment.save();
 
     return res.json(comment);
@@ -87,13 +95,8 @@ const commentOnPost = async (req: Request, res: Response) => {
 
 const router = Router();
 
-router.get("/:identifier/:slug", userMid, authMid, getPost);
-router.get(
-  "/:identifier/:slug/comments",
-  userMid,
-  authMid,
-  commentOnPost
-);
+router.get("/:identifier/:slug", userMid, getPost);
+router.get("/:identifier/:slug/comments", userMid, authMid, commentOnPost);
 router.get("/", userMid, getPosts);
 router.post("/", userMid, authMid, createPost);
 
