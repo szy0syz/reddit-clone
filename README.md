@@ -268,6 +268,7 @@ votes: Vote[];
 ```
 
 > - 某些敏感表，不用 `userId` 外链，而是用加了索引的 `username` 外联，非常巧啊
+> - 这个前提 `username` 是不可变的
 > - 另外这里计算 voteScore 时，把 **`写复杂`** 降维到 **`读复杂`**，很有味道啊
 > - 很有　 🐗🐗🐗 “野猪书”🐗🐗🐗 　的感觉
 
@@ -377,6 +378,34 @@ if (oldImageUrn !== "") {
 ```
 
 - **`以后数据库存文件相对路径url或urn，一定不能以 "/" 开头，要不然就会被认为是绝对路径坑人`**
+
+- 统计接口，`orm` 用起来应该挺麻烦，不如直接动态 `sql`
+
+```ts
+/**
+ * SELECT s.title, s.name,
+ * COALESCE('http://localhost:5000/images/' || s."imageUrn" , 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y') as imageUrl,
+ * count(p.id) as "postCount"
+ * FROM subs s
+ * LEFT JOIN posts p ON s.name = p."subName"
+ * GROUP BY s.title, s.name, imageUrl
+ * ORDER BY "postCount" DESC
+ * LIMIT 5;
+ */
+const imageUrlExp = `COALESCE('${process.env.APP_URL}/images/' || s."imageUrn" , 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y')`;
+
+const subs = await getConnection()
+  .createQueryBuilder()
+  .select(
+    `s.title, s.name, ${imageUrlExp} as "imageUrl", count(p.id) as "postCount"`
+  )
+  .from(Sub, "s")
+  .leftJoin(Post, "p", `s.name = p."subName"`)
+  .groupBy('s.title, s.name, "imageUrl"')
+  .orderBy(`"postCount"`, "DESC")
+  .limit(5)
+  .execute();
+```
 
 ---
 
@@ -655,4 +684,12 @@ const observeElement = (element: HTMLElement) => {
 };
 ```
 
-> #17 0-0
+- 当使用 `swr` 时，可以这样避免发送错误请求
+
+```ts
+const { data: post, error } = useSWR<Post>(
+  identifier && slug ? `/posts/${identifier}/${slug}` : null
+);
+```
+
+> #17 13-20

@@ -1,8 +1,8 @@
-import Head from "next/head";
-import { useRouter } from "next/router";
 import useSWR from "swr";
-import Image from "next/image";
 import Link from "next/link";
+import Head from "next/head";
+import Image from "next/image";
+import { useRouter } from "next/router";
 import { Post } from "../../../../types";
 import Sidebar from "../../../../components/Sidebar";
 

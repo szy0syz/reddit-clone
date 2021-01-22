@@ -1,14 +1,14 @@
 import useSWR from "swr";
+import Axios from "axios";
 import Head from "next/head";
 import cls from "classnames";
 import Image from "next/image";
 import { Sub } from "../../types";
 import { useRouter } from "next/router";
+import Sidebar from "../../components/Sidebar";
 import PostCard from "../../components/PostCard";
 import { useAuthState } from "../../context/auth";
-import Sidebar from "../../components/Sidebar";
 import { ChangeEvent, createRef, Fragment, useEffect, useState } from "react";
-import Axios from "axios";
 
 export default function SubPage() {
   // Local state
