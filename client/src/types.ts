@@ -24,18 +24,30 @@ export interface User {
 }
 
 export interface Sub {
-  createdAt: string
-  updatedAt: string
-  name: string
-  title: string
-  description: string
-  imageUrn: string
-  bannerUrn: string
-  username: string
-  posts: Post[]
-  postCount?: string
+  createdAt: string;
+  updatedAt: string;
+  name: string;
+  title: string;
+  description: string;
+  imageUrn: string;
+  bannerUrn: string;
+  username: string;
+  posts: Post[];
+  postCount?: string;
 
   // Virtuals
-  imageUrl: string
-  bannerUrl: string
+  imageUrl: string;
+  bannerUrl: string;
+}
+
+export interface Comment {
+  identifier: string;
+  body: string;
+  username: string;
+  createdAt: string;
+  updatedAt: string;
+
+  // Virtuals
+  userVote: number;
+  voteScore: number;
 }

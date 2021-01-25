@@ -692,4 +692,4 @@ const { data: post, error } = useSWR<Post>(
 );
 ```
 
-> #17 13-20
+> #19 0-0

@@ -12,7 +12,7 @@ import Post from "./Post";
 import User from "./User";
 import BaseEntity from "./Entity";
 import Vote from "./Vote";
-import { Exclude } from "class-transformer";
+import { Exclude, Expose } from "class-transformer";
 
 @Entity("comments")
 class Comment extends BaseEntity {
@@ -48,6 +48,10 @@ class Comment extends BaseEntity {
     // * 你到底是顶了一下还是踩了一下
     const index = this.votes?.findIndex((v) => v.username === user.username);
     this.userVote = index > -1 ? this.votes[index].value : 0;
+  }
+
+  @Expose() get voteScore(): number {
+    return this.votes?.reduce((memo, curt) => memo + (curt.value || 0), 0);
   }
 
   @BeforeInsert()
