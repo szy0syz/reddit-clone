@@ -32,7 +32,8 @@ export default function Home() {
         }
       );
 
-      dispatch("LOGIN", res.data);
+      // payload 只要 userInfo 对象就行了
+      dispatch("LOGIN", res.data?.user);
 
       router.back();
     } catch (error) {

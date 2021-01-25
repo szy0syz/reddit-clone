@@ -11,6 +11,7 @@ dayjs.extend(relativeTime);
 
 interface PostCardProps {
   post: Post;
+  revalidate?: Function;
 }
 
 export default function PostCard({
@@ -27,6 +28,7 @@ export default function PostCard({
     url,
     username,
   },
+  revalidate
 }: PostCardProps) {
   const vote = async (value: number) => {
     try {
@@ -35,8 +37,9 @@ export default function PostCard({
         slug,
         value,
       });
-
-      console.log(res.data);
+      console.log('投票结果:', res);
+      console.log('revalidate:', revalidate);
+      if (revalidate) revalidate();
     } catch (err) {
       console.log(err);
     }

@@ -87,11 +87,12 @@ export default function Home() {
                     key={sub.name}
                     className="flex items-center px-4 py-2 text-xs border-b"
                   >
-                    <div className="mr-2 overflow-hidden rounded-full cursor-pointer">
+                    <div className="">
                       <Link href={`/r/${sub.name}`}>
                         <Image
                           src={sub.imageUrl}
                           alt="Sub"
+                          className="ml-2 rounded-full cursor-pointer"
                           width={(6 * 16) / 4}
                           height={(6 * 16) / 4}
                         />
