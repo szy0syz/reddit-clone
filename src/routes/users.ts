@@ -7,6 +7,7 @@ import userMid from "../middlewares/user";
 
 const getUserSubmission = async (req: Request, res: Response) => {
   try {
+    console.log('~~~req', req.params);
     const user = await User.findOneOrFail({
       where: { username: req.params.username },
       select: ["username", "createdAt"],
@@ -14,7 +15,7 @@ const getUserSubmission = async (req: Request, res: Response) => {
 
     const posts = await Post.find({
       where: { user },
-      relations: ["post"],
+      relations: ['comments', 'votes', 'sub'],
     });
 
     const comments = await Comment.find({
@@ -51,3 +52,5 @@ const getUserSubmission = async (req: Request, res: Response) => {
 const router = Router();
 
 router.get("/:username", userMid, getUserSubmission);
+
+export default router;
