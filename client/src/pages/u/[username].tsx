@@ -14,7 +14,6 @@ export default function user() {
   const { data, error } = useSWR<any>(username ? `/users/${username}` : null);
 
   if (error) router.push("/");
-  if (data) console.log("~~data~~", data);
 
   return (
     <>
@@ -23,7 +22,7 @@ export default function user() {
       </Head>
       {data && (
         <div className="container flex pt-5">
-          <div className="w-160">
+          <div className="w-160" style={{ marginTop: "-1rem" }}>
             {data.submissions.map((submission: any) => {
               if (submission.type === "Post") {
                 const post: Post = submission;
@@ -76,8 +75,10 @@ export default function user() {
               </div>
               <div className="p-3 text-center">
                 <h1 className="mb-4 text-xl">{data.user.username}</h1>
-                <hr/>
-                <p className="mt-3">Joined {dayjs(data.user.createdAt).format('MMM YYYY')}</p>
+                <hr />
+                <p className="mt-3">
+                  Joined {dayjs(data.user.createdAt).format("MMM YYYY")}
+                </p>
               </div>
             </div>
           </div>
