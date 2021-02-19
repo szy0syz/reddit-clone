@@ -118,7 +118,7 @@ export const Navbar: React.FC = () => {
           (authenticated ? (
             // Show logout
             <button
-              className="hidden py-1 mr-4 leading-5 sm:block md:w-20 lg:w-32 hollow blue button"
+              className="hidden w-20 py-1 mr-4 leading-5 sm:block lg:w-32 hollow blue button"
               onClick={logout}
             >
               Logout
@@ -126,12 +126,12 @@ export const Navbar: React.FC = () => {
           ) : (
             <Fragment>
               <Link href="/login">
-                <a className="hidden py-1 mr-4 leading-5 sm:block md:w-20 lg:w-32 hollow blue button">
+                <a className="hidden w-20 py-1 mr-4 leading-5 sm:block lg:w-32 hollow blue button">
                   log in
                 </a>
               </Link>
               <Link href="/register">
-                <a className="hidden py-1 leading-5 sm:block md:w-20 lg:w-32 blue button">
+                <a className="hidden w-20 py-1 leading-5 sm:block lg:w-32 blue button">
                   sign up
                 </a>
               </Link>
