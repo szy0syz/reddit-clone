@@ -9,7 +9,7 @@ import { createConnection } from "typeorm";
 
 import authRoutes from "./routes/auth";
 import postRoutes from "./routes/posts";
-import subRoutes from "./routes/sub";
+import subRoutes from "./routes/subs";
 import miscRoutes from "./routes/misc";
 import userRoutes from "./routes/users";
 
