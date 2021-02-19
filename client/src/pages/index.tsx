@@ -61,7 +61,7 @@ export default function Home() {
       <div>
         <div className="container flex pt-4">
           {/* Posts feed */}
-          <div className="w-160">
+          <div className="w-full px-4 md:w-160 md:p-0">
             {isValidating && <p className="text-lg text-center">Loading...</p>}
             {posts?.map((post) => (
               <PostCard
@@ -75,7 +75,7 @@ export default function Home() {
             )}
           </div>
           {/* Siderbar */}
-          <div className="ml-6 w-80">
+          <div className="hidden ml-6 md:block w-80">
             <div className="bg-white rounded">
               <div className="p-4 border-b-2">
                 <p className="text-lg font-semibold text-center">
