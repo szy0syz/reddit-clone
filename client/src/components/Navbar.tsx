@@ -58,7 +58,6 @@ export const Navbar: React.FC = () => {
   }, [name]);
 
   const goToSub = (sub: Sub) => {
-    console.log("~~sub", sub);
     router.push(`/r/${sub.name}`);
     setName("");
   };

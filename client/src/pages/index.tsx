@@ -5,11 +5,12 @@ import useSWR, { useSWRInfinite } from "swr";
 import Image from "next/image";
 import { Fragment, useState, useEffect } from "react";
 import Link from "next/link";
+import { useAuthState } from "../context/auth";
 // import { GetServerSideProps } from 'next';
 
 export default function Home() {
   const [observedPost, setObservedPost] = useState("");
-  // const { data: posts } = useSWR<Post[]>("/posts");
+  const { authenticated } = useAuthState();
 
   const {
     data,
@@ -20,7 +21,7 @@ export default function Home() {
     isValidating,
     revalidate,
   } = useSWRInfinite<Post[]>((index) => `/posts?page=${index}`);
-  const { data: topSubs } = useSWR("/misc/topSubs");
+  const { data: topSubs } = useSWR<Sub[]>("/misc/topSubs");
 
   const posts: Post[] = data ? [].concat(...data) : [];
   // const isLoadingInitialData = !data && !error;
@@ -89,19 +90,19 @@ export default function Home() {
                   >
                     <div>
                       <Link href={`/r/${sub.name}`}>
-                        <Image
-                          src={sub.imageUrl}
-                          alt="Sub"
-                          className="ml-2 rounded-full cursor-pointer"
-                          width={(6 * 16) / 4}
-                          height={(6 * 16) / 4}
-                        />
+                        <a>
+                          <Image
+                            src={sub.imageUrl}
+                            alt="Sub"
+                            className="ml-2 rounded-full cursor-pointer"
+                            width={(6 * 16) / 4}
+                            height={(6 * 16) / 4}
+                          />
+                        </a>
                       </Link>
                     </div>
                     <Link href={`/r/${sub.name}`}>
-                      <a
-                        className="ml-2 font-bold hover:cursor-pointer"
-                      >
+                      <a className="ml-2 font-bold hover:cursor-pointer">
                         /r/{sub.name}
                       </a>
                     </Link>
@@ -109,6 +110,15 @@ export default function Home() {
                   </div>
                 ))}
               </div>
+              {authenticated && (
+                <div className="p-4 border-t-2">
+                  <Link href="/subs/create">
+                    <a className="w-full px-2 py-1 blue button">
+                      Create Communtity
+                    </a>
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         </div>
