@@ -1,19 +1,19 @@
-import Link from "next/link";
-import Axios from "axios";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-import classNames from "classnames";
+import Link from 'next/link'
+import Axios from 'axios'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
+import classNames from 'classnames'
 
-import { Post } from "../types";
-import ActionButton from "./ActionButton";
-import { useRouter } from "next/router";
-import { useAuthState } from "../context/auth";
+import { Post } from '../types'
+import ActionButton from './ActionButton'
+import { useRouter } from 'next/router'
+import { useAuthState } from '../context/auth'
 
-dayjs.extend(relativeTime);
+dayjs.extend(relativeTime)
 
 interface PostCardProps {
-  post: Post;
-  revalidate?: Function;
+  post: Post
+  revalidate?: Function
 }
 
 export default function PostCard({
@@ -33,32 +33,38 @@ export default function PostCard({
   },
   revalidate,
 }: PostCardProps) {
-  const router = useRouter();
-  const { authenticated } = useAuthState();
+  const { authenticated } = useAuthState()
 
-  const isInSubPage = router.pathname === "/r/[sub]"; // -> /r/[sub]
+  const router = useRouter()
+
+  const isInSubPage = router.pathname === '/r/[sub]' // /r/[sub]
 
   const vote = async (value: number) => {
-    if (!authenticated) router.push("/login");
+    if (!authenticated) router.push('/login')
 
-    if (value === userVote) value = 0;
+    if (value === userVote) value = 0
 
     try {
-      const res = await Axios.post("/misc/vote", {
+      const res = await Axios.post('/misc/vote', {
         identifier,
         slug,
         value,
-      });
-      console.log("投票结果:", res);
-      console.log("revalidate:", revalidate);
-      if (revalidate) revalidate();
+      })
+
+      if (revalidate) revalidate()
+
+      console.log("投票结果:", res.data)
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
-  };
+  }
 
   return (
-    <div key={identifier} className="flex mb-4 bg-white rounded">
+    <div
+      key={identifier}
+      className="flex mb-4 bg-white rounded"
+      id={identifier}
+    >
       {/* Vote section */}
       <div className="w-10 py-3 text-center bg-gray-200 rounded-l">
         {/* Upvote */}
@@ -67,8 +73,8 @@ export default function PostCard({
           onClick={() => vote(1)}
         >
           <i
-            className={classNames("icon-arrow-up", {
-              "text-red-500": userVote === 1,
+            className={classNames('icon-arrow-up', {
+              'text-red-500': userVote === 1,
             })}
           ></i>
         </div>
@@ -79,8 +85,8 @@ export default function PostCard({
           onClick={() => vote(-1)}
         >
           <i
-            className={classNames("icon-arrow-down", {
-              "text-blue-600": userVote === -1,
+            className={classNames('icon-arrow-down', {
+              'text-blue-600': userVote === -1,
             })}
           ></i>
         </div>
@@ -92,7 +98,7 @@ export default function PostCard({
             <>
               <Link href={`/r/${subName}`}>
                 <img
-                  src={sub?.imageUrl}
+                  src={sub.imageUrl}
                   className="w-6 h-6 mr-1 rounded-full cursor-pointer"
                 />
               </Link>
@@ -104,7 +110,6 @@ export default function PostCard({
               <span className="mx-1 text-xs text-gray-500">•</span>
             </>
           )}
-
           <p className="text-xs text-gray-500">
             Posted by
             <Link href={`/u/${username}`}>
@@ -142,5 +147,5 @@ export default function PostCard({
         </div>
       </div>
     </div>
-  );
+  )
 }

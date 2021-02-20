@@ -15,9 +15,9 @@ const fetcher = async (url: string) => {
   try {
     const res = await Axios.get(url);
     return res.data;
-  } catch (error) {
+  } catch (err) {
     // swr 会接住这个异常
-    throw error.response.data;
+    throw err.response.data;
   }
 };
 
@@ -30,7 +30,7 @@ function App({ Component, pageProps }: AppProps) {
     <SWRConfig
       value={{
         fetcher,
-        dedupingInterval: 1 * 1000,
+        dedupingInterval: 10000,
       }}
     >
       <AuthProvider>
