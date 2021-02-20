@@ -15,14 +15,15 @@ export default function Home() {
   const {
     data,
     error,
-    mutate,
     size: page,
     setSize: setPage,
     isValidating,
     revalidate,
   } = useSWRInfinite<Post[]>((index) => `/posts?page=${index}`);
-  const { data: topSubs } = useSWR<Sub[]>("/misc/topSubs");
 
+  const isInitialLoading = !data && !error
+
+  const { data: topSubs } = useSWR<Sub[]>("/misc/topSubs");
   const posts: Post[] = data ? [].concat(...data) : [];
   // const isLoadingInitialData = !data && !error;
 
@@ -62,7 +63,7 @@ export default function Home() {
         <div className="container flex pt-4">
           {/* Posts feed */}
           <div className="w-full px-4 md:w-160 md:p-0">
-            {isValidating && <p className="text-lg text-center">Loading...</p>}
+            {isInitialLoading && <p className="text-lg text-center">Loading...</p>}
             {posts?.map((post) => (
               <PostCard
                 post={post}

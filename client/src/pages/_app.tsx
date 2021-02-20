@@ -8,7 +8,7 @@ import { SWRConfig } from "swr";
 import "../styles/icons.css";
 import "../styles/tailwind.css";
 
-Axios.defaults.baseURL = "http://localhost:4000/api";
+Axios.defaults.baseURL = process.env.NEXT_PUBLIC_SERVER_BASE_URL + "/api";
 Axios.defaults.withCredentials = true;
 
 const fetcher = async (url: string) => {
